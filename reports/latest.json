@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-22T21:36:44.337048+00:00",
+  "generated_at_utc": "2026-09-22T21:50:37.203317+00:00",
   "proximity_threshold_pct": 1.5,
   "tickers_analyzed": 10,
   "hits_count": 2,
@@ -21,6 +21,12 @@
       "intraday_momentum_up": true,
       "confirmations": 1,
       "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 4060.5851,
+      "long_val": 3967.1801,
+      "long_vah": 4714.4201,
       "position_suggestion": {
         "entry_price": 4396.2002,
         "stop_price": 4233.405,
@@ -47,6 +53,12 @@
       "intraday_momentum_up": true,
       "confirmations": 1,
       "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "abwärts",
+      "long_poc": 493.7795,
+      "long_val": 456.8607,
+      "long_vah": 498.595,
       "position_suggestion": {
         "entry_price": 518.0,
         "stop_price": 490.4308,
@@ -74,7 +86,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 144.0398,
+      "long_val": 142.5583,
+      "long_vah": 151.4473
     },
     {
       "ticker": "WMT",
@@ -92,7 +110,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 118.834,
+      "long_val": 107.3453,
+      "long_vah": 129.1133
     },
     {
       "ticker": "MCD",
@@ -110,7 +134,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "abwärts",
+      "long_poc": 308.4195,
+      "long_val": 271.9147,
+      "long_vah": 335.4013
     },
     {
       "ticker": "RWE.DE",
@@ -128,7 +158,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 56.2778,
+      "long_val": 47.9147,
+      "long_vah": 61.1197
     },
     {
       "ticker": "SPY",
@@ -146,7 +182,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 681.8115,
+      "long_val": 634.283,
+      "long_vah": 714.331
     },
     {
       "ticker": "QQQ",
@@ -164,7 +206,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 603.8625,
+      "long_val": 562.035,
+      "long_vah": 677.865
     },
     {
       "ticker": "DIA",
@@ -183,6 +231,12 @@
       "intraday_momentum_up": true,
       "confirmations": 1,
       "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "abwärts",
+      "long_poc": 493.7795,
+      "long_val": 456.8607,
+      "long_vah": 498.595,
       "position_suggestion": {
         "entry_price": 518.0,
         "stop_price": 490.4308,
@@ -208,7 +262,13 @@
       "volume_spike": true,
       "intraday_momentum_up": true,
       "confirmations": 2,
-      "confidence": "stark"
+      "confidence": "stark",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "abwärts",
+      "long_poc": 205.9575,
+      "long_val": 195.035,
+      "long_vah": 209.17
     },
     {
       "ticker": "GC=F",
@@ -227,6 +287,12 @@
       "intraday_momentum_up": true,
       "confirmations": 1,
       "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 4060.5851,
+      "long_val": 3967.1801,
+      "long_vah": 4714.4201,
       "position_suggestion": {
         "entry_price": 4396.2002,
         "stop_price": 4233.405,
@@ -252,7 +318,13 @@
       "volume_spike": false,
       "intraday_momentum_up": true,
       "confirmations": 1,
-      "confidence": "moderat"
+      "confidence": "moderat",
+      "confluence": false,
+      "confluence_level_name": null,
+      "weekly_trend": "aufwärts",
+      "long_poc": 60.355,
+      "long_val": 54.98,
+      "long_vah": 91.53
     }
   ],
   "errors": {}
