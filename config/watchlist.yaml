@@ -2,10 +2,27 @@
 # Ticker müssen dem Yahoo-Finance-Symbol entsprechen:
 #   - US-Aktien: normales Kürzel, z.B. PG, WMT, MCD
 #   - Nicht-US-Börsen brauchen ein Suffix, z.B. RWE an der Xetra = "RWE.DE"
-# Neue Ticker einfach als weitere Zeile ergänzen.
+#   - Futures: Kürzel + "=F", z.B. Gold "GC=F", WTI-Rohöl "CL=F"
+# Neue Ticker einfach als weitere Zeile ergänzen. Der Scanner (Volumenprofil,
+# RSI, Schwellenwerte in %) funktioniert unverändert für jeden Ticker-Typ.
 
 tickers:
+  # Einzelaktien
   - PG
   - WMT
   - MCD
   - RWE.DE
+
+  # Große Indizes – als liquide ETFs abgebildet, da Index-Ticker (^GSPC etc.)
+  # bei yfinance kein verlässliches Handelsvolumen liefern, das Volumenprofil
+  # aber echtes Volumen braucht.
+  - SPY       # S&P 500
+  - QQQ       # Nasdaq 100
+  - DIA       # Dow Jones Industrial Average
+  - EXS1.DE   # DAX (iShares Core DAX UCITS ETF, Xetra)
+
+  # Rohstoffe – als Frontmonat-Futures, weil deren Handelsvolumen die
+  # tatsächliche Marktaktivität widerspiegelt (Standard-Basis für
+  # Volumenprofil-Analysen bei Gold/Öl, z.B. auch auf TradingView üblich).
+  - GC=F      # Gold
+  - CL=F      # WTI-Rohöl
