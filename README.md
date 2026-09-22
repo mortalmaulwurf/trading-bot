@@ -37,7 +37,13 @@ Diskussion.
    Positionsgrößen-Vorschlag berechnet, basierend auf dem Risikorahmen aus
    `config/settings.yaml` (max. Risiko pro Trade, Hebel) und einer
    vereinfachten Stop-Referenz (1% unter VAL).
-7. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
+7. Für jeden Ticker wird geprüft, ob in den nächsten 7 Tagen (Standard)
+   **Quartalszahlen** (via yfinance) oder ein bekannter **Makro-Termin**
+   (z.B. Fed-Zinsentscheid) anstehen. Der US-Arbeitsmarktbericht wird
+   automatisch erkannt (immer der erste Freitag im Monat), Fed-/EZB-Termine
+   werden manuell in `config/macro_events.yaml` gepflegt (siehe unten). Das
+   ist reiner Zusatzkontext zum Gap-Risiko, kein Ausschlusskriterium.
+8. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
    (`reports/latest.md`, `reports/latest.json` sowie ein tagesdatiertes
    Archiv) und bei Treffern per Telegram gepusht.
 
@@ -47,11 +53,13 @@ Diskussion.
 config/
   settings.yaml     Risiko- und Analyse-Parameter (Schwellenwerte, Indikatoren, ...)
   watchlist.yaml     Liste der beobachteten Ticker – frei erweiterbar
+  macro_events.yaml   Manuell gepflegte Fed-/EZB-/Makro-Termine
 src/
   config.py           Config-/Secrets-Loading
   data_fetcher.py      yfinance-Anbindung (Daily, Intraday, FX-Kurs)
   volume_profile.py    POC/VAL/VAH-Berechnung
-  indicators.py        RSI, Volumen-Spike, Intraday-Momentum
+  indicators.py        RSI, Volumen-Spike, Intraday-Momentum, Wochentrend
+  events.py            Bevorstehende Quartalszahlen & Makro-Termine
   risk.py              Positionsgrößen-Vorschlag (informativ)
   signal_engine.py       Kombiniert alles zu einer Ticker-Analyse
   report.py               Markdown-/JSON-Report-Erzeugung
@@ -70,6 +78,21 @@ reports/                       Generierte Reports (werden vom Workflow committed
 - **Schwellenwerte, Risiko, Indikator-Parameter:** `config/settings.yaml`
   bearbeiten – jede Zeile ist kommentiert. Änderungen wirken sich sofort
   beim nächsten Lauf aus, kein Code-Änderung nötig.
+
+## Makro-Termine pflegen (Fed, EZB, ...)
+
+Der US-Arbeitsmarktbericht wird automatisch erkannt (regelbasiert). Für
+Fed-Zinsentscheide, EZB-Ratssitzungen und ähnliche Termine gibt es keine
+verlässliche kostenlose Live-API – diese müssen manuell in
+`config/macro_events.yaml` eingetragen werden. Die Datei ist ausführlich
+kommentiert (inkl. Links zu den offiziellen Kalendern) und standardmäßig
+leer, damit keine falschen/veralteten Termine vorgetäuscht werden. Am
+besten alle paar Wochen kurz mit dem offiziellen Fed-/EZB-Kalender
+abgleichen und anstehende Termine ergänzen.
+
+Quartalszahlen werden automatisch über yfinance abgerufen – hier ist keine
+manuelle Pflege nötig, die Schätzung kann aber va. bei Nicht-US-Tickern
+ungenau sein.
 
 ## Telegram-Bot einrichten
 

@@ -34,6 +34,8 @@ analysis:
   confluence_threshold_pct: 2.0
   # Anzahl Wochen für den gleitenden Durchschnitt des Wochentrend-Filters
   weekly_trend_sma_periods: 10
+  # Vorlauf (in Tagen), in dem nach bevorstehenden Quartalszahlen/Makro-Terminen gesucht wird
+  upcoming_events_days_ahead: 7
 
 schedule:
   # Informativ – der tatsächliche Zeitplan steht in .github/workflows/daily_analysis.yml

@@ -41,6 +41,7 @@ class AnalysisSettings:
     lookback_days_long: int
     confluence_threshold_pct: float
     weekly_trend_sma_periods: int
+    upcoming_events_days_ahead: int
 
 
 @dataclass(frozen=True)

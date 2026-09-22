@@ -36,6 +36,8 @@ def format_hits_message(report: dict) -> str:
             extra.append(
                 "✅ Wochentrend aufwärts" if h["weekly_trend"] == "aufwärts" else "⚠️ Wochentrend abwärts"
             )
+        if h.get("upcoming_events"):
+            extra.append(f"⚠️ Termin: {'; '.join(h['upcoming_events'])}")
         extra_line = f"\n{' · '.join(extra)}" if extra else ""
         lines.append(
             f"\n*{h['ticker']}* ({h['confidence']})\n"

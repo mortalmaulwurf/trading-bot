@@ -1,0 +1,22 @@
+# Bekannte Makro-Termine mit hoher Marktrelevanz (Zinsentscheide u.ä.).
+#
+# WICHTIG: Diese Liste wird NICHT automatisch aktualisiert oder abgerufen –
+# es gibt keine verlässliche kostenlose Live-API dafür. Bitte regelmäßig
+# manuell mit den offiziellen Kalendern abgleichen und Termine eintragen:
+#   - Fed/FOMC-Zinsentscheide: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+#   - EZB-Ratssitzungen:       https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html
+#   - US-Inflation (CPI):      https://www.bls.gov/schedule/news_release/cpi.htm
+#
+# Der US-Arbeitsmarktbericht (Nonfarm Payrolls) wird NICHT hier eingetragen –
+# der Scanner berechnet ihn automatisch (immer der erste Freitag im Monat).
+#
+# region: "US" betrifft USD-Ticker (PG, WMT, MCD, SPY, QQQ, GC=F, CL=F)
+#         "EU" betrifft EUR-Ticker (RWE.DE, EXS1.DE)
+#
+# Beispiel-Eintrag (Datum/Label anpassen, dann das "#" davor entfernen):
+# events:
+#   - date: "2026-11-04"
+#     label: "FOMC-Zinsentscheid"
+#     region: "US"
+
+events: []

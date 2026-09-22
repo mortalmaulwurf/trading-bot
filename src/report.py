@@ -31,6 +31,7 @@ def _analysis_to_dict(a: TickerAnalysis) -> dict:
         "confluence": a.confluence,
         "confluence_level_name": a.confluence_level_name,
         "weekly_trend": a.weekly_trend,
+        "upcoming_events": a.upcoming_events,
     }
     if a.long_profile:
         d["long_poc"] = round(a.long_profile.poc, 4)
@@ -91,6 +92,8 @@ def _format_markdown(report: dict) -> str:
             if h.get("weekly_trend"):
                 trend_note = "✅ im Einklang" if h["weekly_trend"] == "aufwärts" else "⚠️ spricht dagegen"
                 lines.append(f"- Wochentrend: {h['weekly_trend']} ({trend_note} mit einem Long-Einstieg)")
+            if h.get("upcoming_events"):
+                lines.append(f"- ⚠️ Bevorstehende Termine: {'; '.join(h['upcoming_events'])} (Gap-Risiko beachten)")
             lines.append(
                 f"- Bestätigungen ({h['confirmations']}/3): "
                 f"RSI {h['rsi']}{' (überverkauft)' if h['rsi_oversold'] else ''} · "
@@ -119,6 +122,14 @@ def _format_markdown(report: dict) -> str:
             f"{r['rsi']} | {r.get('weekly_trend') or '–'} | {'✅' if r['is_hit'] else '–'} |"
         )
 
+    events_by_ticker = {
+        r["ticker"]: r["upcoming_events"] for r in report["all_results"] if r.get("upcoming_events")
+    }
+    if events_by_ticker:
+        lines.append("\n## Bevorstehende Termine\n")
+        for ticker, events in events_by_ticker.items():
+            lines.append(f"- **{ticker}**: {'; '.join(events)}")
+
     if report["errors"]:
         lines.append("\n## Fehler\n")
         for ticker, err in report["errors"].items():
@@ -127,7 +138,9 @@ def _format_markdown(report: dict) -> str:
     lines.append(
         "\n---\n_Nur zur Analyse-Unterstützung, keine automatisch ausgeführten Trades. "
         "Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter "
-        "(config/settings.yaml) und einer vereinfachten Stop-Referenz (1% unter VAL)._"
+        "(config/settings.yaml) und einer vereinfachten Stop-Referenz (1% unter VAL). "
+        "Termine sind Näherungswerte (Earnings via yfinance-Schätzung, Makro-Termine manuell in "
+        "config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._"
     )
     return "\n".join(lines)
 

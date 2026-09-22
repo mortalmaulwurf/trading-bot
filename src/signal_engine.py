@@ -10,6 +10,7 @@ import pandas as pd
 from . import indicators
 from .config import AnalysisSettings, RiskSettings
 from .data_fetcher import fetch_daily, fetch_intraday, get_currency, resample_to_4h
+from .events import get_upcoming_events
 from .risk import PositionSuggestion, suggest_position
 from .volume_profile import VolumeProfile, compute_volume_profile
 
@@ -38,6 +39,7 @@ class TickerAnalysis:
     confluence_level_name: Optional[str]
     weekly_trend: Optional[str]
     weekly_sma: Optional[float]
+    upcoming_events: list[str]
 
 
 def _confidence_label(confirmations: int) -> str:
@@ -129,6 +131,12 @@ def analyze_ticker(
     except Exception as exc:
         logger.warning("Langfristiges Volumenprofil für %s nicht verfügbar: %s", ticker, exc)
 
+    upcoming_events: list[str] = []
+    try:
+        upcoming_events = get_upcoming_events(ticker, currency, analysis_settings.upcoming_events_days_ahead)
+    except Exception as exc:
+        logger.warning("Bevorstehende Termine für %s nicht abrufbar: %s", ticker, exc)
+
     return TickerAnalysis(
         ticker=ticker,
         current_price=current_price,
@@ -150,4 +158,5 @@ def analyze_ticker(
         confluence_level_name=confluence_level_name,
         weekly_trend=weekly_trend_value,
         weekly_sma=weekly_sma,
+        upcoming_events=upcoming_events,
     )
