@@ -21,7 +21,8 @@ def send_telegram_message(token: str, chat_id: str, text: str) -> bool:
         response.raise_for_status()
         return True
     except requests.RequestException as exc:
-        logger.error("Telegram-Benachrichtigung fehlgeschlagen: %s", exc)
+        body = exc.response.text if exc.response is not None else ""
+        logger.error("Telegram-Benachrichtigung fehlgeschlagen: %s | Antwort: %s", exc, body)
         return False
 
 

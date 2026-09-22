@@ -90,6 +90,14 @@ oder auf GitHub einsehen kannst.
    Manuell testen: im Tab **Actions** → "Daily Swing-Trading Scan" →
    **Run workflow**.
 
+**Telegram isoliert testen:** Der Scan-Workflow schickt eine Nachricht nur,
+wenn es Treffer gibt. Um nur die Telegram-Zugangsdaten zu prüfen (ohne auf
+einen Treffer zu warten), im Tab **Actions** → "Test Telegram
+Notification" → **Run workflow** ausführen. Schlägt das fehl, in den
+Logs des Schritts "Send test message" nachsehen – dort steht die genaue
+Fehlermeldung von Telegram (z.B. `404 Not Found` bedeutet meist: der
+hinterlegte `TELEGRAM_BOT_TOKEN`-Secret ist falsch/veraltet).
+
 **Hinweis:** GitHub deaktiviert geplante (`schedule`-)Workflows automatisch,
 wenn 60 Tage lang kein Commit ins Repo ging. Der Workflow committet bei
 jedem Treffer/Report selbst wieder ins Repo, was das i.d.R. verhindert –
