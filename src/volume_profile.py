@@ -49,7 +49,7 @@ def compute_volume_profile(df: pd.DataFrame, bins: int = 30, value_area_pct: flo
         raise ValueError("Kein Volumen für Volumenprofil vorhanden")
 
     poc_idx = int(np.argmax(bin_volume))
-    poc_price = (edges[poc_idx] + edges[poc_idx + 1]) / 2
+    poc_price = float((edges[poc_idx] + edges[poc_idx + 1]) / 2)
 
     # Value Area: von POC ausgehend jeweils die volumenstärkere Nachbar-Bin
     # dazunehmen, bis value_area_pct % des Gesamtvolumens erreicht sind.
