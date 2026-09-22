@@ -1,0 +1,11 @@
+# Watchlist für den Swing-Trading-Scanner.
+# Ticker müssen dem Yahoo-Finance-Symbol entsprechen:
+#   - US-Aktien: normales Kürzel, z.B. PG, WMT, MCD
+#   - Nicht-US-Börsen brauchen ein Suffix, z.B. RWE an der Xetra = "RWE.DE"
+# Neue Ticker einfach als weitere Zeile ergänzen.
+
+tickers:
+  - PG
+  - WMT
+  - MCD
+  - RWE.DE

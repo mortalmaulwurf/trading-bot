@@ -1,0 +1,32 @@
+# Zentrale Konfiguration für den Swing-Trading-Scanner.
+# Werte hier ändern wirkt sich beim nächsten Lauf sofort aus, kein Code-Änderung nötig.
+
+risk:
+  total_capital_eur: 300
+  shot_size_eur: 100
+  max_risk_per_trade_eur: 10
+  leverage: 2
+
+analysis:
+  # Wie viele Kalendertage Daily-Historie für das Volumenprofil geladen werden
+  lookback_days_daily: 180
+  # Intraday-Timeframe für die Timing-Komponente (yfinance: z.B. "1h")
+  intraday_interval: "1h"
+  # yfinance erlaubt "1h" nur für die letzten ~730 Tage; 60 Tage reichen für Timing völlig aus
+  intraday_lookback_days: 60
+  # Ab welchem Abstand (in %) zu POC/VAL ein Ticker als "Treffer" gilt
+  proximity_threshold_pct: 1.5
+  # Anteil des Volumens, der die Value Area (zwischen VAL und VAH) definiert
+  value_area_pct: 70
+  # Anzahl Preis-Bins für die Volumenprofil-Berechnung
+  volume_profile_bins: 30
+  rsi_period: 14
+  rsi_oversold: 30
+  rsi_overbought: 70
+  # Volumen-Spike: letztes Tagesvolumen >= Durchschnitt der letzten N Tage * Multiplikator
+  volume_spike_multiplier: 1.5
+  volume_spike_lookback: 20
+
+schedule:
+  # Informativ – der tatsächliche Zeitplan steht in .github/workflows/daily_analysis.yml
+  cron_utc: "0 22 * * 1-5"

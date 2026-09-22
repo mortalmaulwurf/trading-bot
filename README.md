@@ -1,1 +1,143 @@
 # trading-bot
+
+Automatisierte Swing-Trading-Analyse für das "Strict Coach Mode"-System:
+täglicher Scan einer Watchlist auf strukturelle Unterstützungen
+(Volumenprofil: POC, VAL) mit Reversal-Bestätigung, Telegram-Push bei
+Treffern und ein Report zum gemeinsamen Vertiefen der Analyse.
+
+**Wichtig:** Das Skript platziert keine Orders. Es liefert ausschließlich
+Analysen, Benachrichtigungen und informative Positionsgrößen-Vorschläge zur
+Diskussion.
+
+## Wie es funktioniert
+
+1. Für jeden Ticker der Watchlist werden Daily-Kursdaten (Standard: 6 Monate)
+   und 1h-Intraday-Daten (Standard: 60 Tage, zusätzlich zu 4h resampled)
+   über [yfinance](https://github.com/ranaroussi/yfinance) geladen.
+2. Aus den Daily-Daten wird ein Volumenprofil berechnet: **POC** (Point of
+   Control), **VAL**/**VAH** (Value Area Low/High). Da yfinance kein
+   echtes Volumen-pro-Preis liefert, wird das Tagesvolumen jeder Kerze
+   näherungsweise über ihre Handelsspanne verteilt – eine übliche
+   Approximation ohne Tick-/Orderbuchdaten.
+3. Liegt der aktuelle Kurs innerhalb der konfigurierten Schwelle
+   (Standard: 1,5%) um POC oder VAL, gilt das als **Treffer**.
+4. Als Bestätigung werden geprüft: RSI (überverkauft), Volumen-Spike am
+   letzten Handelstag, und ein einfaches Intraday-Momentum-Signal (1h/4h).
+   Je mehr Bestätigungen, desto höher die Einschätzung ("schwach" /
+   "moderat" / "stark").
+5. Bei einem Treffer wird zusätzlich ein informativer
+   Positionsgrößen-Vorschlag berechnet, basierend auf dem Risikorahmen aus
+   `config/settings.yaml` (max. Risiko pro Trade, Hebel) und einer
+   vereinfachten Stop-Referenz (1% unter VAL).
+6. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
+   (`reports/latest.md`, `reports/latest.json` sowie ein tagesdatiertes
+   Archiv) und bei Treffern per Telegram gepusht.
+
+## Projektstruktur
+
+```
+config/
+  settings.yaml     Risiko- und Analyse-Parameter (Schwellenwerte, Indikatoren, ...)
+  watchlist.yaml     Liste der beobachteten Ticker – frei erweiterbar
+src/
+  config.py           Config-/Secrets-Loading
+  data_fetcher.py      yfinance-Anbindung (Daily, Intraday, FX-Kurs)
+  volume_profile.py    POC/VAL/VAH-Berechnung
+  indicators.py        RSI, Volumen-Spike, Intraday-Momentum
+  risk.py              Positionsgrößen-Vorschlag (informativ)
+  signal_engine.py       Kombiniert alles zu einer Ticker-Analyse
+  report.py               Markdown-/JSON-Report-Erzeugung
+  notifier.py               Telegram-Versand
+  main.py                    Orchestrierung / Einstiegspunkt
+reports/                       Generierte Reports (werden vom Workflow committed)
+.github/workflows/
+  daily_analysis.yml            GitHub-Actions-Zeitplan
+```
+
+## Watchlist & Parameter anpassen
+
+- **Ticker hinzufügen/entfernen:** `config/watchlist.yaml` bearbeiten.
+  Ticker müssen dem Yahoo-Finance-Symbol entsprechen (z.B. `RWE.DE` für
+  RWE an der Xetra, US-Aktien ohne Suffix).
+- **Schwellenwerte, Risiko, Indikator-Parameter:** `config/settings.yaml`
+  bearbeiten – jede Zeile ist kommentiert. Änderungen wirken sich sofort
+  beim nächsten Lauf aus, kein Code-Änderung nötig.
+
+## Telegram-Bot einrichten
+
+1. In Telegram mit **@BotFather** chatten, `/newbot` senden und den Namen
+   vergeben. Du bekommst einen **Bot-Token** (Format `123456:ABC-DEF...`).
+2. Deine **Chat-ID** herausfinden: dem neuen Bot eine beliebige Nachricht
+   schreiben, dann im Browser
+   `https://api.telegram.org/bot<DEIN_TOKEN>/getUpdates` öffnen und das
+   Feld `"chat":{"id":...}` ablesen. Alternativ kurz mit
+   **@userinfobot** chatten.
+
+## Automatisierung: GitHub Actions (empfohlen)
+
+Der Workflow `.github/workflows/daily_analysis.yml` läuft automatisch
+werktags um 22:00 UTC (sicher nach US-Marktschluss) und schreibt den
+Report per Commit zurück ins Repo, damit du ihn direkt hier in Claude
+oder auf GitHub einsehen kannst.
+
+**Einrichtung:**
+
+1. Im GitHub-Repo zu **Settings → Secrets and variables → Actions** gehen.
+2. Zwei Repository-Secrets anlegen:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
+3. Fertig – der Workflow läuft ab dem nächsten Zeitplan-Tick automatisch.
+   Manuell testen: im Tab **Actions** → "Daily Swing-Trading Scan" →
+   **Run workflow**.
+
+**Hinweis:** GitHub deaktiviert geplante (`schedule`-)Workflows automatisch,
+wenn 60 Tage lang kein Commit ins Repo ging. Der Workflow committet bei
+jedem Treffer/Report selbst wieder ins Repo, was das i.d.R. verhindert –
+bei längerer Pause ggf. im Tab **Actions** manuell wieder aktivieren.
+
+## Alternative: Lokale Ausführung (Cronjob / Task Scheduler)
+
+Falls du das Skript stattdessen lokal laufen lassen willst:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+cp .env.example .env               # TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID eintragen
+python -m src.main
+```
+
+- **Linux/Mac (Cronjob):** `crontab -e`, z.B. für 22:00 Uhr UTC werktags:
+  ```
+  0 22 * * 1-5 cd /pfad/zu/trading-bot && /pfad/zu/.venv/bin/python -m src.main
+  ```
+- **Windows (Task Scheduler):** Neue Aufgabe anlegen, Trigger täglich
+  (Mo-Fr) nach US-Marktschluss, Aktion `python.exe -m src.main` mit
+  Startverzeichnis = Projektordner.
+
+## Ergebnisse ansehen
+
+- `reports/latest.md` – kompakte, lesbare Zusammenfassung des letzten Laufs.
+- `reports/latest.json` – strukturierte Daten für die Weiterverarbeitung.
+- `reports/YYYY-MM-DD.md` / `.json` – Tages-Archiv.
+
+Bei GitHub-Actions-Betrieb landen diese automatisch im Repo – einfach die
+Datei in einer Claude-Session zu diesem Repo öffnen/lesen lassen, um die
+Analyse gemeinsam zu vertiefen.
+
+## Einschränkungen & Hinweise
+
+- **yfinance** ist eine inoffizielle, aber kostenlose und zuverlässige
+  Anbindung an Yahoo-Finance-Daten – ausreichend für täglichen Multi-Ticker-
+  Abruf inkl. Intraday. Offizielle kostenlose Alternativen (z.B. Alpha
+  Vantage, Twelve Data) haben deutlich engere Rate-Limits (teils nur 25
+  Requests/Tag) und eignen sich hier schlechter.
+- Das Volumenprofil ist eine **Näherung** aus OHLCV-Daten, kein echtes
+  Orderbuch-/Tick-Volumenprofil.
+- Intraday-Daten (`1h`) sind bei yfinance auf die letzten ~730 Tage
+  begrenzt und können am Wochenende/außerhalb der Handelszeiten dünn
+  ausfallen – das Skript fängt das ab und lässt die Intraday-Bestätigung
+  in dem Fall einfach weg.
+- Für die Positionsgrößen-Berechnung bei USD-Tickern wird der aktuelle
+  EUR/USD-Kurs live abgerufen (mit Fallback-Näherungswert bei Fehlern).
