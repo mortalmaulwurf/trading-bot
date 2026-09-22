@@ -26,6 +26,14 @@ analysis:
   # Volumen-Spike: letztes Tagesvolumen >= Durchschnitt der letzten N Tage * Multiplikator
   volume_spike_multiplier: 1.5
   volume_spike_lookback: 20
+  # Langfristiges Volumenprofil (zusätzlich zum obigen lookback_days_daily),
+  # um zu prüfen, ob kurz- und langfristige Levels übereinstimmen (Konfluenz)
+  lookback_days_long: 365
+  # Ab welchem Abstand (in %) ein kurzfristiges Level und ein langfristiges
+  # Level als "übereinstimmend" gelten
+  confluence_threshold_pct: 2.0
+  # Anzahl Wochen für den gleitenden Durchschnitt des Wochentrend-Filters
+  weekly_trend_sma_periods: 10
 
 schedule:
   # Informativ – der tatsächliche Zeitplan steht in .github/workflows/daily_analysis.yml

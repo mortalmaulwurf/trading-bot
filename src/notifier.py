@@ -29,11 +29,19 @@ def send_telegram_message(token: str, chat_id: str, text: str) -> bool:
 def format_hits_message(report: dict) -> str:
     lines = [f"📊 *Swing-Trading Scan* – {report['hits_count']} Treffer"]
     for h in report["hits"]:
+        extra = []
+        if h.get("confluence"):
+            extra.append(f"✅ Konfluenz mit {h['confluence_level_name']}")
+        if h.get("weekly_trend"):
+            extra.append(
+                "✅ Wochentrend aufwärts" if h["weekly_trend"] == "aufwärts" else "⚠️ Wochentrend abwärts"
+            )
+        extra_line = f"\n{' · '.join(extra)}" if extra else ""
         lines.append(
             f"\n*{h['ticker']}* ({h['confidence']})\n"
             f"Kurs {h['current_price']} {h['currency']} · {h['nearest_level_name']} @ {h['nearest_level_price']} "
             f"({h['distance_pct']:+.2f}%)\n"
-            f"Bestätigungen: {h['confirmations']}/3"
+            f"Bestätigungen: {h['confirmations']}/3{extra_line}"
         )
     lines.append("\nDetails siehe Report im Repo (reports/latest.md).")
     return "\n".join(lines)

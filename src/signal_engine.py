@@ -33,6 +33,11 @@ class TickerAnalysis:
     confirmations: int
     confidence: str
     position_suggestion: Optional[PositionSuggestion]
+    long_profile: Optional[VolumeProfile]
+    confluence: bool
+    confluence_level_name: Optional[str]
+    weekly_trend: Optional[str]
+    weekly_sma: Optional[float]
 
 
 def _confidence_label(confirmations: int) -> str:
@@ -95,6 +100,35 @@ def analyze_ticker(
         stop_price = profile.val * 0.99
         position_suggestion = suggest_position(current_price, stop_price, currency, fx_rate, risk_settings)
 
+    # Langfristiges Volumenprofil (Konfluenz) und Wochentrend – beides nur
+    # Zusatzkontext, kein Ausschlusskriterium; scheitert der Abruf, läuft die
+    # Kernanalyse trotzdem weiter (analog zur Intraday-Komponente oben).
+    long_profile = None
+    confluence = False
+    confluence_level_name = None
+    weekly_trend_value = None
+    weekly_sma = None
+    try:
+        long_daily = fetch_daily(ticker, analysis_settings.lookback_days_long)
+        long_profile = compute_volume_profile(
+            long_daily, bins=analysis_settings.volume_profile_bins, value_area_pct=analysis_settings.value_area_pct
+        )
+        weekly_trend_value, weekly_sma = indicators.weekly_trend(
+            long_daily, sma_periods=analysis_settings.weekly_trend_sma_periods
+        )
+
+        if is_hit:
+            long_levels = {"langfristiges POC": long_profile.poc, "langfristiges VAL": long_profile.val}
+            closest_long_name, closest_long_price = min(
+                long_levels.items(), key=lambda item: abs(nearest_price - item[1]) / nearest_price
+            )
+            confluence_distance_pct = abs(nearest_price - closest_long_price) / nearest_price * 100
+            if confluence_distance_pct <= analysis_settings.confluence_threshold_pct:
+                confluence = True
+                confluence_level_name = closest_long_name
+    except Exception as exc:
+        logger.warning("Langfristiges Volumenprofil für %s nicht verfügbar: %s", ticker, exc)
+
     return TickerAnalysis(
         ticker=ticker,
         current_price=current_price,
@@ -111,4 +145,9 @@ def analyze_ticker(
         confirmations=confirmations,
         confidence=_confidence_label(confirmations),
         position_suggestion=position_suggestion,
+        long_profile=long_profile,
+        confluence=confluence,
+        confluence_level_name=confluence_level_name,
+        weekly_trend=weekly_trend_value,
+        weekly_sma=weekly_sma,
     )

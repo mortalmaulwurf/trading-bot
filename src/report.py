@@ -28,7 +28,14 @@ def _analysis_to_dict(a: TickerAnalysis) -> dict:
         "intraday_momentum_up": a.intraday_momentum_up,
         "confirmations": a.confirmations,
         "confidence": a.confidence,
+        "confluence": a.confluence,
+        "confluence_level_name": a.confluence_level_name,
+        "weekly_trend": a.weekly_trend,
     }
+    if a.long_profile:
+        d["long_poc"] = round(a.long_profile.poc, 4)
+        d["long_val"] = round(a.long_profile.val, 4)
+        d["long_vah"] = round(a.long_profile.vah, 4)
     if a.position_suggestion:
         p = a.position_suggestion
         d["position_suggestion"] = {
@@ -75,6 +82,15 @@ def _format_markdown(report: dict) -> str:
                 f"(Abstand {h['distance_pct']:+.2f}%)"
             )
             lines.append(f"- Volumenprofil: POC {h['poc']} · VAL {h['val']} · VAH {h['vah']}")
+            if "long_poc" in h:
+                lines.append(
+                    f"- Langfristiges Volumenprofil (Kontext): POC {h['long_poc']} · "
+                    f"VAL {h['long_val']} · VAH {h['long_vah']}"
+                    + (f" — ✅ Konfluenz mit {h['confluence_level_name']}" if h["confluence"] else "")
+                )
+            if h.get("weekly_trend"):
+                trend_note = "✅ im Einklang" if h["weekly_trend"] == "aufwärts" else "⚠️ spricht dagegen"
+                lines.append(f"- Wochentrend: {h['weekly_trend']} ({trend_note} mit einem Long-Einstieg)")
             lines.append(
                 f"- Bestätigungen ({h['confirmations']}/3): "
                 f"RSI {h['rsi']}{' (überverkauft)' if h['rsi_oversold'] else ''} · "
@@ -94,13 +110,13 @@ def _format_markdown(report: dict) -> str:
         lines.append("_Keine Treffer in diesem Lauf._\n")
 
     lines.append("## Alle beobachteten Ticker\n")
-    lines.append("| Ticker | Kurs | Nächstes Level | Abstand % | RSI | Treffer |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| Ticker | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |")
+    lines.append("|---|---|---|---|---|---|---|")
     for r in report["all_results"]:
         lines.append(
             f"| {r['ticker']} | {r['current_price']} {r['currency']} | "
             f"{r['nearest_level_name']} @ {r['nearest_level_price']} | {r['distance_pct']:+.2f}% | "
-            f"{r['rsi']} | {'✅' if r['is_hit'] else '–'} |"
+            f"{r['rsi']} | {r.get('weekly_trend') or '–'} | {'✅' if r['is_hit'] else '–'} |"
         )
 
     if report["errors"]:

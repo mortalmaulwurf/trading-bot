@@ -25,11 +25,19 @@ Diskussion.
    letzten Handelstag, und ein einfaches Intraday-Momentum-Signal (1h/4h).
    Je mehr Bestätigungen, desto höher die Einschätzung ("schwach" /
    "moderat" / "stark").
-5. Bei einem Treffer wird zusätzlich ein informativer
+5. Zusätzlich wird ein **langfristiges Volumenprofil** (Standard: 12 Monate)
+   berechnet. Liegt ein langfristiges POC/VAL nahe am kurzfristigen
+   Treffer-Level (Standard: ±2%), gilt das als **Konfluenz** – ein
+   deutlich stärkeres strukturelles Signal, da sich mehrere Zeiträume
+   einig sind. Aus denselben Langzeitdaten wird außerdem ein einfacher
+   **Wochentrend-Filter** abgeleitet (aktueller Wochenschluss über/unter
+   dem gleitenden Durchschnitt der letzten 10 Wochen) – als Kontext, ob
+   der übergeordnete Trend für oder gegen einen Long-Einstieg spricht.
+6. Bei einem Treffer wird zusätzlich ein informativer
    Positionsgrößen-Vorschlag berechnet, basierend auf dem Risikorahmen aus
    `config/settings.yaml` (max. Risiko pro Trade, Hebel) und einer
    vereinfachten Stop-Referenz (1% unter VAL).
-6. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
+7. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
    (`reports/latest.md`, `reports/latest.json` sowie ein tagesdatiertes
    Archiv) und bei Treffern per Telegram gepusht.
 

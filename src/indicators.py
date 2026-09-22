@@ -1,5 +1,7 @@
-"""Einfache technische Indikatoren: RSI, Volumen-Spike, Intraday-Momentum."""
+"""Einfache technische Indikatoren: RSI, Volumen-Spike, Intraday-Momentum, Wochentrend."""
 from __future__ import annotations
+
+from typing import Optional
 
 import pandas as pd
 
@@ -33,3 +35,17 @@ def intraday_momentum_turning_up(df_intraday: pd.DataFrame, lookback_bars: int =
     recent = df_intraday["Close"].iloc[-(lookback_bars + 1):]
     lowest_pos = int(recent.values.argmin())
     return bool(lowest_pos < len(recent) - 1 and recent.iloc[-1] > recent.iloc[lowest_pos])
+
+
+def weekly_trend(daily_df: pd.DataFrame, sma_periods: int = 10) -> tuple[Optional[str], Optional[float]]:
+    """Grober Trend-Kontext auf Wochenbasis: notiert der letzte Wochenschluss
+    über oder unter seinem gleitenden Durchschnitt der letzten sma_periods Wochen?
+    Dient nur als Zusatzinfo (Trendrichtung), nicht als eigenständiges Signal."""
+    weekly_close = daily_df["Close"].resample("W").last().dropna()
+    if len(weekly_close) < sma_periods:
+        return None, None
+
+    sma = float(weekly_close.rolling(sma_periods).mean().iloc[-1])
+    last_close = float(weekly_close.iloc[-1])
+    trend = "aufwärts" if last_close > sma else "abwärts"
+    return trend, sma

@@ -38,6 +38,9 @@ class AnalysisSettings:
     rsi_overbought: float
     volume_spike_multiplier: float
     volume_spike_lookback: int
+    lookback_days_long: int
+    confluence_threshold_pct: float
+    weekly_trend_sma_periods: int
 
 
 @dataclass(frozen=True)
