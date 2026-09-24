@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-24T05:34:08.354109+00:00",
+  "generated_at_utc": "2026-09-24T06:34:43.987435+00:00",
   "proximity_threshold_pct": 1.5,
   "tickers_analyzed": 9,
   "hits_count": 2,
@@ -7,16 +7,16 @@
     {
       "ticker": "CL=F",
       "name": "WTI-Rohöl",
-      "current_price": 91.56,
+      "current_price": 92.33,
       "currency": "USD",
       "poc": 91.4918,
       "val": 80.5307,
       "vah": 104.1393,
       "nearest_level_name": "POC",
       "nearest_level_price": 91.4918,
-      "distance_pct": 0.07,
+      "distance_pct": 0.92,
       "is_hit": true,
-      "rsi": 47.6,
+      "rsi": 48.9,
       "rsi_oversold": false,
       "volume_spike": false,
       "intraday_momentum_up": true,
@@ -30,27 +30,27 @@
       "long_val": 54.98,
       "long_vah": 91.53,
       "position_suggestion": {
-        "entry_price": 91.56,
+        "entry_price": 92.33,
         "stop_price": 79.7254,
-        "stop_distance_pct": 12.93,
-        "shares": 0.96,
-        "position_value_eur": 77.37,
-        "margin_required_eur": 38.68
+        "stop_distance_pct": 13.65,
+        "shares": 0.9,
+        "position_value_eur": 73.25,
+        "margin_required_eur": 36.63
       }
     },
     {
       "ticker": "GC=F",
       "name": "Gold",
-      "current_price": 4324.3999,
+      "current_price": 4318.7002,
       "currency": "USD",
       "poc": 4388.435,
       "val": 4276.1667,
       "vah": 4821.4702,
       "nearest_level_name": "VAL",
       "nearest_level_price": 4276.1667,
-      "distance_pct": 1.13,
+      "distance_pct": 0.99,
       "is_hit": true,
-      "rsi": 42.4,
+      "rsi": 41.8,
       "rsi_oversold": false,
       "volume_spike": false,
       "intraday_momentum_up": true,
@@ -64,12 +64,12 @@
       "long_val": 3994.5667,
       "long_vah": 4729.1667,
       "position_suggestion": {
-        "entry_price": 4324.3999,
+        "entry_price": 4318.7002,
         "stop_price": 4233.405,
-        "stop_distance_pct": 2.1,
+        "stop_distance_pct": 1.98,
         "shares": 0.13,
-        "position_value_eur": 475.24,
-        "margin_required_eur": 237.62
+        "position_value_eur": 506.32,
+        "margin_required_eur": 253.16
       }
     }
   ],
@@ -259,16 +259,16 @@
     {
       "ticker": "GC=F",
       "name": "Gold",
-      "current_price": 4324.3999,
+      "current_price": 4318.7002,
       "currency": "USD",
       "poc": 4388.435,
       "val": 4276.1667,
       "vah": 4821.4702,
       "nearest_level_name": "VAL",
       "nearest_level_price": 4276.1667,
-      "distance_pct": 1.13,
+      "distance_pct": 0.99,
       "is_hit": true,
-      "rsi": 42.4,
+      "rsi": 41.8,
       "rsi_oversold": false,
       "volume_spike": false,
       "intraday_momentum_up": true,
@@ -282,27 +282,27 @@
       "long_val": 3994.5667,
       "long_vah": 4729.1667,
       "position_suggestion": {
-        "entry_price": 4324.3999,
+        "entry_price": 4318.7002,
         "stop_price": 4233.405,
-        "stop_distance_pct": 2.1,
+        "stop_distance_pct": 1.98,
         "shares": 0.13,
-        "position_value_eur": 475.24,
-        "margin_required_eur": 237.62
+        "position_value_eur": 506.32,
+        "margin_required_eur": 253.16
       }
     },
     {
       "ticker": "CL=F",
       "name": "WTI-Rohöl",
-      "current_price": 91.56,
+      "current_price": 92.33,
       "currency": "USD",
       "poc": 91.4918,
       "val": 80.5307,
       "vah": 104.1393,
       "nearest_level_name": "POC",
       "nearest_level_price": 91.4918,
-      "distance_pct": 0.07,
+      "distance_pct": 0.92,
       "is_hit": true,
-      "rsi": 47.6,
+      "rsi": 48.9,
       "rsi_oversold": false,
       "volume_spike": false,
       "intraday_momentum_up": true,
@@ -316,12 +316,12 @@
       "long_val": 54.98,
       "long_vah": 91.53,
       "position_suggestion": {
-        "entry_price": 91.56,
+        "entry_price": 92.33,
         "stop_price": 79.7254,
-        "stop_distance_pct": 12.93,
-        "shares": 0.96,
-        "position_value_eur": 77.37,
-        "margin_required_eur": 38.68
+        "stop_distance_pct": 13.65,
+        "shares": 0.9,
+        "position_value_eur": 73.25,
+        "margin_required_eur": 36.63
       }
     }
   ],
