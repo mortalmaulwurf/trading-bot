@@ -37,6 +37,12 @@ analysis:
   # Vorlauf (in Tagen), in dem nach bevorstehenden Quartalszahlen/Makro-Terminen gesucht wird
   upcoming_events_days_ahead: 7
 
+notifications:
+  # Optionale URL der gehosteten HTML-Übersichtsseite (z.B. Render Static
+  # Site, siehe README "Online-Übersicht"). Wird an Telegram-Nachrichten
+  # angehängt, falls gesetzt. Leer lassen, wenn (noch) nicht gehostet.
+  site_url: ""
+
 schedule:
   # Informativ – der tatsächliche Zeitplan steht in .github/workflows/daily_analysis.yml
   cron_utc: "0 22 * * 1-5"

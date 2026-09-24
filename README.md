@@ -45,7 +45,8 @@ Diskussion.
    ist reiner Zusatzkontext zum Gap-Risiko, kein Ausschlusskriterium.
 8. Ergebnisse werden als Markdown + JSON in `reports/` geschrieben
    (`reports/latest.md`, `reports/latest.json` sowie ein tagesdatiertes
-   Archiv) und bei Treffern per Telegram gepusht.
+   Archiv), zusätzlich als einfache HTML-Seite (`site/index.html`,
+   siehe "Online-Übersicht" unten) und bei Treffern per Telegram gepusht.
 
 ## Projektstruktur
 
@@ -62,19 +63,22 @@ src/
   events.py            Bevorstehende Quartalszahlen & Makro-Termine
   risk.py              Positionsgrößen-Vorschlag (informativ)
   signal_engine.py       Kombiniert alles zu einer Ticker-Analyse
-  report.py               Markdown-/JSON-Report-Erzeugung
-  notifier.py               Telegram-Versand
-  main.py                    Orchestrierung / Einstiegspunkt
+  report.py               Markdown-/JSON-/HTML-Report-Erzeugung
+  html_report.py            HTML-Übersichtsseite (für Render o.ä.)
+  notifier.py                 Telegram-Versand
+  main.py                       Orchestrierung / Einstiegspunkt
 reports/                       Generierte Reports (werden vom Workflow committed)
+site/                          Generierte HTML-Übersichtsseite (dito)
 .github/workflows/
   daily_analysis.yml            GitHub-Actions-Zeitplan
 ```
 
 ## Watchlist & Parameter anpassen
 
-- **Ticker hinzufügen/entfernen:** `config/watchlist.yaml` bearbeiten.
-  Ticker müssen dem Yahoo-Finance-Symbol entsprechen (z.B. `RWE.DE` für
-  RWE an der Xetra, US-Aktien ohne Suffix).
+- **Ticker hinzufügen/entfernen:** `config/watchlist.yaml` bearbeiten. Jeder
+  Eintrag hat ein `symbol` (muss dem Yahoo-Finance-Symbol entsprechen, z.B.
+  `RWE.DE` für RWE an der Xetra) und einen frei wählbaren `name` (Klarname,
+  erscheint in Report/Telegram statt des kryptischen Symbols).
 - **Schwellenwerte, Risiko, Indikator-Parameter:** `config/settings.yaml`
   bearbeiten – jede Zeile ist kommentiert. Änderungen wirken sich sofort
   beim nächsten Lauf aus, kein Code-Änderung nötig.
@@ -133,6 +137,34 @@ hinterlegte `TELEGRAM_BOT_TOKEN`-Secret ist falsch/veraltet).
 wenn 60 Tage lang kein Commit ins Repo ging. Der Workflow committet bei
 jedem Treffer/Report selbst wieder ins Repo, was das i.d.R. verhindert –
 bei längerer Pause ggf. im Tab **Actions** manuell wieder aktivieren.
+
+## Online-Übersicht (Render Static Site)
+
+Jeder Lauf erzeugt zusätzlich `site/index.html` – eine einfache,
+eigenständige HTML-Seite mit derselben Zusammenfassung wie `reports/latest.md`
+(Klarnamen, Treffer, Volumenprofil, Wochentrend, Termine), aber besser lesbar
+auf dem Handy. Damit sie dauerhaft unter einer festen URL erreichbar ist
+(z.B. um sie direkt in die Telegram-Nachricht zu packen):
+
+1. Auf [render.com](https://render.com) registrieren/einloggen (kostenlose
+   Stufe reicht).
+2. **New** → **Static Site** → dieses GitHub-Repo verbinden
+   (`mortalmaulwurf/trading-bot`).
+3. Branch: `main` · Build Command: leer lassen (kein Build nötig) ·
+   Publish directory: `site`.
+4. Deployen – Render vergibt eine URL wie
+   `https://trading-bot-xxxx.onrender.com`.
+5. Diese URL in `config/settings.yaml` unter `notifications.site_url`
+   eintragen und committen.
+
+Da der Workflow nach jedem Lauf automatisch neue Inhalte ins Repo committet,
+erkennt Render das (bei verbundenem GitHub-Repo) und deployt automatisch neu
+– die URL bleibt dabei immer gleich. Ab dann hängt jede Telegram-Nachricht
+bei Treffern den Link an.
+
+**Hinweis:** Ohne eingetragene `site_url` funktioniert alles wie bisher,
+nur ohne den Link in der Telegram-Nachricht – die HTML-Seite wird trotzdem
+lokal/im Repo erzeugt.
 
 ## Alternative: Lokale Ausführung (Cronjob / Task Scheduler)
 

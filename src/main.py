@@ -19,19 +19,21 @@ logger = logging.getLogger(__name__)
 
 def run() -> int:
     settings = load_settings()
-    tickers = load_watchlist()
+    watchlist = load_watchlist()
     fx_rate = fetch_fx_rate_usd_to_eur()
 
     results = []
     errors: dict[str, str] = {}
 
-    for ticker in tickers:
-        logger.info("Analysiere %s ...", ticker)
+    for entry in watchlist:
+        logger.info("Analysiere %s (%s) ...", entry.name, entry.symbol)
         try:
-            results.append(analyze_ticker(ticker, settings.analysis, settings.risk, fx_rate))
+            results.append(
+                analyze_ticker(entry.symbol, settings.analysis, settings.risk, fx_rate, display_name=entry.name)
+            )
         except Exception as exc:
-            logger.exception("Analyse für %s fehlgeschlagen", ticker)
-            errors[ticker] = str(exc)
+            logger.exception("Analyse für %s fehlgeschlagen", entry.symbol)
+            errors[entry.symbol] = str(exc)
 
     report = report_module.build_report(results, errors, settings.analysis.proximity_threshold_pct)
     md_path, json_path = report_module.write_reports(report)
@@ -40,7 +42,7 @@ def run() -> int:
     if report["hits_count"] > 0:
         token, chat_id = get_telegram_credentials()
         if token and chat_id:
-            message = format_hits_message(report)
+            message = format_hits_message(report, site_url=settings.notifications.site_url)
             if send_telegram_message(token, chat_id, message):
                 logger.info("Telegram-Benachrichtigung gesendet (%d Treffer)", report["hits_count"])
         else:

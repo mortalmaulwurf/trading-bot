@@ -1,27 +1,39 @@
 # Watchlist für den Swing-Trading-Scanner.
-# Ticker müssen dem Yahoo-Finance-Symbol entsprechen:
+# symbol: muss dem Yahoo-Finance-Symbol entsprechen:
 #   - US-Aktien: normales Kürzel, z.B. PG, WMT, MCD
 #   - Nicht-US-Börsen brauchen ein Suffix, z.B. RWE an der Xetra = "RWE.DE"
 #   - Futures: Kürzel + "=F", z.B. Gold "GC=F", WTI-Rohöl "CL=F"
-# Neue Ticker einfach als weitere Zeile ergänzen. Der Scanner (Volumenprofil,
-# RSI, Schwellenwerte in %) funktioniert unverändert für jeden Ticker-Typ.
+# name: frei wählbarer Klarname, erscheint in Report/Telegram statt/neben
+#   dem kryptischen Symbol. Weglassen ist ok, dann wird das Symbol angezeigt.
+#
+# Neue Einträge einfach ergänzen. Der Scanner (Volumenprofil, RSI,
+# Schwellenwerte in %) funktioniert unverändert für jeden Ticker-Typ.
 
 tickers:
   # Einzelaktien
-  - PG
-  - WMT
-  - MCD
-  - RWE.DE
+  - symbol: PG
+    name: "Procter & Gamble"
+  - symbol: WMT
+    name: "Walmart"
+  - symbol: MCD
+    name: "McDonald's"
+  - symbol: RWE.DE
+    name: "RWE"
 
   # Große Indizes – als liquide ETFs abgebildet, da Index-Ticker (^GSPC etc.)
   # bei yfinance kein verlässliches Handelsvolumen liefern, das Volumenprofil
   # aber echtes Volumen braucht.
-  - SPY       # S&P 500
-  - QQQ       # Nasdaq 100
-  - EXS1.DE   # DAX (iShares Core DAX UCITS ETF, Xetra)
+  - symbol: SPY
+    name: "S&P 500"
+  - symbol: QQQ
+    name: "Nasdaq 100"
+  - symbol: EXS1.DE
+    name: "DAX"
 
   # Rohstoffe – als Frontmonat-Futures, weil deren Handelsvolumen die
   # tatsächliche Marktaktivität widerspiegelt (Standard-Basis für
   # Volumenprofil-Analysen bei Gold/Öl, z.B. auch auf TradingView üblich).
-  - GC=F      # Gold
-  - CL=F      # WTI-Rohöl
+  - symbol: GC=F
+    name: "Gold"
+  - symbol: CL=F
+    name: "WTI-Rohöl"

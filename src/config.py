@@ -45,9 +45,21 @@ class AnalysisSettings:
 
 
 @dataclass(frozen=True)
+class NotificationSettings:
+    site_url: str = ""
+
+
+@dataclass(frozen=True)
 class Settings:
     risk: RiskSettings
     analysis: AnalysisSettings
+    notifications: NotificationSettings
+
+
+@dataclass(frozen=True)
+class WatchlistEntry:
+    symbol: str
+    name: str
 
 
 def load_settings(path: Optional[Path] = None) -> Settings:
@@ -58,14 +70,22 @@ def load_settings(path: Optional[Path] = None) -> Settings:
     return Settings(
         risk=RiskSettings(**raw["risk"]),
         analysis=AnalysisSettings(**raw["analysis"]),
+        notifications=NotificationSettings(**raw.get("notifications", {})),
     )
 
 
-def load_watchlist(path: Optional[Path] = None) -> list[str]:
+def load_watchlist(path: Optional[Path] = None) -> list[WatchlistEntry]:
     path = path or CONFIG_DIR / "watchlist.yaml"
     with open(path, "r", encoding="utf-8") as f:
         raw = yaml.safe_load(f)
-    return list(raw["tickers"])
+
+    entries = []
+    for item in raw["tickers"]:
+        if isinstance(item, str):
+            entries.append(WatchlistEntry(symbol=item, name=item))
+        else:
+            entries.append(WatchlistEntry(symbol=item["symbol"], name=item.get("name", item["symbol"])))
+    return entries
 
 
 def get_telegram_credentials() -> tuple[Optional[str], Optional[str]]:

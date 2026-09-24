@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class TickerAnalysis:
     ticker: str
+    display_name: str
     current_price: float
     currency: str
     profile: VolumeProfile
@@ -55,6 +56,7 @@ def analyze_ticker(
     analysis_settings: AnalysisSettings,
     risk_settings: RiskSettings,
     fx_rate_usd_eur: float,
+    display_name: Optional[str] = None,
 ) -> TickerAnalysis:
     daily = fetch_daily(ticker, analysis_settings.lookback_days_daily)
     profile = compute_volume_profile(
@@ -139,6 +141,7 @@ def analyze_ticker(
 
     return TickerAnalysis(
         ticker=ticker,
+        display_name=display_name or ticker,
         current_price=current_price,
         currency=currency,
         profile=profile,

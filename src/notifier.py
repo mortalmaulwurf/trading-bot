@@ -26,7 +26,7 @@ def send_telegram_message(token: str, chat_id: str, text: str) -> bool:
         return False
 
 
-def format_hits_message(report: dict) -> str:
+def format_hits_message(report: dict, site_url: str = "") -> str:
     lines = [f"📊 *Swing-Trading Scan* – {report['hits_count']} Treffer"]
     for h in report["hits"]:
         extra = []
@@ -40,10 +40,12 @@ def format_hits_message(report: dict) -> str:
             extra.append(f"⚠️ Termin: {'; '.join(h['upcoming_events'])}")
         extra_line = f"\n{' · '.join(extra)}" if extra else ""
         lines.append(
-            f"\n*{h['ticker']}* ({h['confidence']})\n"
+            f"\n*{h['name']}* ({h['ticker']}) ({h['confidence']})\n"
             f"Kurs {h['current_price']} {h['currency']} · {h['nearest_level_name']} @ {h['nearest_level_price']} "
             f"({h['distance_pct']:+.2f}%)\n"
             f"Bestätigungen: {h['confirmations']}/3{extra_line}"
         )
+    if site_url:
+        lines.append(f"\n🔗 Volle Übersicht: {site_url}")
     lines.append("\nDetails siehe Report im Repo (reports/latest.md).")
     return "\n".join(lines)

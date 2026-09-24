@@ -5,14 +5,17 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .html_report import render_html
 from .signal_engine import TickerAnalysis
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
+SITE_DIR = Path(__file__).resolve().parent.parent / "site"
 
 
 def _analysis_to_dict(a: TickerAnalysis) -> dict:
     d = {
         "ticker": a.ticker,
+        "name": a.display_name,
         "current_price": round(a.current_price, 4),
         "currency": a.currency,
         "poc": round(a.profile.poc, 4),
@@ -76,7 +79,7 @@ def _format_markdown(report: dict) -> str:
     if report["hits"]:
         lines.append("## Treffer\n")
         for h in report["hits"]:
-            lines.append(f"### {h['ticker']} – {h['confidence']}")
+            lines.append(f"### {h['name']} ({h['ticker']}) – {h['confidence']}")
             lines.append(
                 f"- Kurs: {h['current_price']} {h['currency']} · "
                 f"Level: {h['nearest_level_name']} @ {h['nearest_level_price']} "
@@ -112,23 +115,23 @@ def _format_markdown(report: dict) -> str:
     else:
         lines.append("_Keine Treffer in diesem Lauf._\n")
 
-    lines.append("## Alle beobachteten Ticker\n")
-    lines.append("| Ticker | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |")
+    lines.append("## Alle beobachteten Instrumente\n")
+    lines.append("| Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |")
     lines.append("|---|---|---|---|---|---|---|")
     for r in report["all_results"]:
         lines.append(
-            f"| {r['ticker']} | {r['current_price']} {r['currency']} | "
+            f"| {r['name']} ({r['ticker']}) | {r['current_price']} {r['currency']} | "
             f"{r['nearest_level_name']} @ {r['nearest_level_price']} | {r['distance_pct']:+.2f}% | "
             f"{r['rsi']} | {r.get('weekly_trend') or '–'} | {'✅' if r['is_hit'] else '–'} |"
         )
 
     events_by_ticker = {
-        r["ticker"]: r["upcoming_events"] for r in report["all_results"] if r.get("upcoming_events")
+        (r["name"], r["ticker"]): r["upcoming_events"] for r in report["all_results"] if r.get("upcoming_events")
     }
     if events_by_ticker:
         lines.append("\n## Bevorstehende Termine\n")
-        for ticker, events in events_by_ticker.items():
-            lines.append(f"- **{ticker}**: {'; '.join(events)}")
+        for (name, ticker), events in events_by_ticker.items():
+            lines.append(f"- **{name} ({ticker})**: {'; '.join(events)}")
 
     if report["errors"]:
         lines.append("\n## Fehler\n")
@@ -140,7 +143,10 @@ def _format_markdown(report: dict) -> str:
         "Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter "
         "(config/settings.yaml) und einer vereinfachten Stop-Referenz (1% unter VAL). "
         "Termine sind Näherungswerte (Earnings via yfinance-Schätzung, Makro-Termine manuell in "
-        "config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._"
+        "config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._\n\n"
+        "_**Glossar:** POC = Point of Control (Preis mit dem höchsten Handelsvolumen im Zeitraum) · "
+        "VAL/VAH = Value Area Low/High (untere/obere Grenze der Kern-Handelszone, 70% des Volumens) · "
+        "RSI = Relative-Stärke-Index (0–100, Werte ≤30 gelten als überverkauft)._"
     )
     return "\n".join(lines)
 
@@ -161,5 +167,8 @@ def write_reports(report: dict) -> tuple[Path, Path]:
         path.write_text(json_text, encoding="utf-8")
     for path in (md_path, latest_md):
         path.write_text(md_text, encoding="utf-8")
+
+    SITE_DIR.mkdir(parents=True, exist_ok=True)
+    (SITE_DIR / "index.html").write_text(render_html(report), encoding="utf-8")
 
     return md_path, json_path
