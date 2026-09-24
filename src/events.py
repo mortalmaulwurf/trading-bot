@@ -1,6 +1,7 @@
 """Bevorstehende Termine mit Marktrelevanz: Quartalszahlen (aus yfinance),
-der US-Arbeitsmarktbericht (regelbasiert) und manuell gepflegte Makro-Termine
-(siehe config/macro_events.yaml).
+der US-Arbeitsmarktbericht (regelbasiert), FOMC/EZB/US-CPI (automatisch von
+den offiziellen Kalenderseiten, siehe macro_calendar.py) und zusätzlich
+manuell gepflegte Termine (siehe config/macro_events.yaml).
 
 Reine Zusatzinfo zur Risikoeinschätzung (Gap-Risiko rund um Termine) –
 kein Ausschlusskriterium, beeinflusst nicht, ob ein Ticker als Treffer zählt.
@@ -15,6 +16,8 @@ from typing import Optional
 
 import yaml
 import yfinance as yf
+
+from . import macro_calendar
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +87,13 @@ def get_upcoming_events(ticker: str, currency: str, days_ahead: int) -> list[str
         nfp_date = _next_first_friday(days_ahead)
         if nfp_date:
             events.append(f"US-Arbeitsmarktbericht am {nfp_date.isoformat()}")
+        for d in macro_calendar.get_fomc_dates(days_ahead):
+            events.append(f"FOMC-Zinsentscheid am {d.isoformat()}")
+        for d in macro_calendar.get_cpi_dates(days_ahead):
+            events.append(f"US-Inflationsdaten (CPI) am {d.isoformat()}")
+    elif region == "EU":
+        for d in macro_calendar.get_ecb_dates(days_ahead):
+            events.append(f"EZB-Ratssitzung am {d.isoformat()}")
 
     today = date.today()
     horizon = today + timedelta(days=days_ahead)

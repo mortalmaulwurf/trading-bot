@@ -83,16 +83,27 @@ site/                          Generierte HTML-Übersichtsseite (dito)
   bearbeiten – jede Zeile ist kommentiert. Änderungen wirken sich sofort
   beim nächsten Lauf aus, kein Code-Änderung nötig.
 
-## Makro-Termine pflegen (Fed, EZB, ...)
+## Makro-Termine (Fed, EZB, US-Inflation, ...)
 
-Der US-Arbeitsmarktbericht wird automatisch erkannt (regelbasiert). Für
-Fed-Zinsentscheide, EZB-Ratssitzungen und ähnliche Termine gibt es keine
-verlässliche kostenlose Live-API – diese müssen manuell in
-`config/macro_events.yaml` eingetragen werden. Die Datei ist ausführlich
-kommentiert (inkl. Links zu den offiziellen Kalendern) und standardmäßig
-leer, damit keine falschen/veralteten Termine vorgetäuscht werden. Am
-besten alle paar Wochen kurz mit dem offiziellen Fed-/EZB-Kalender
-abgleichen und anstehende Termine ergänzen.
+Folgende Termine werden **automatisch** erkannt, ohne manuelle Pflege:
+
+- **US-Arbeitsmarktbericht:** regelbasiert (erster Freitag im Monat).
+- **FOMC-Zinsentscheide, EZB-Ratssitzungen, US-Inflationsdaten (CPI):**
+  `src/macro_calendar.py` liest dafür bei jedem Lauf live die offiziellen
+  Kalenderseiten von `federalreserve.gov`, `ecb.europa.eu` und `bls.gov`
+  aus (Text nach Datumsmustern durchsucht, da es dafür keine
+  strukturierte kostenlose API gibt).
+
+**Wichtiger Hinweis zur Zuverlässigkeit:** Das ist Web-Scraping offizieller
+Seiten, kein offizielles API – ändert eine Behörde ihr Seitenlayout, findet
+die Funktion ggf. vorübergehend nichts mehr (loggt das nur, bricht den Scan
+aber nicht ab). Falls dir auffällt, dass ein bekannter Termin fehlt, prüf
+kurz `reports/latest.md`/die Logs des GitHub-Actions-Laufs, ob eine der drei
+Quellen `WARNING ... Makro-Kalender-Abruf fehlgeschlagen` meldet.
+
+Zusätzlich kannst du eigene Termine in `config/macro_events.yaml` eintragen
+(z.B. falls eine der obigen Quellen mal ausfällt oder du weitere Termine
+ergänzen willst) – die Datei ist kommentiert und wird additiv ausgewertet.
 
 Quartalszahlen werden automatisch über yfinance abgerufen – hier ist keine
 manuelle Pflege nötig, die Schätzung kann aber va. bei Nicht-US-Tickern
