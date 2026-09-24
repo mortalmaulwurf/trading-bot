@@ -41,7 +41,7 @@ notifications:
   # Optionale URL der gehosteten HTML-Übersichtsseite (z.B. Render Static
   # Site, siehe README "Online-Übersicht"). Wird an Telegram-Nachrichten
   # angehängt, falls gesetzt. Leer lassen, wenn (noch) nicht gehostet.
-  site_url: ""
+  site_url: "https://trading-bot-cqjb.onrender.com"
 
 schedule:
   # Informativ – der tatsächliche Zeitplan steht in .github/workflows/daily_analysis.yml
