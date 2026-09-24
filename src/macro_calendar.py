@@ -34,9 +34,19 @@ _MONTHS = {
 _MONTH_PATTERN = "|".join(_MONTHS)
 
 
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9,de;q=0.8",
+}
+
+
 def _fetch(url: str) -> Optional[str]:
     try:
-        response = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        response = requests.get(url, timeout=15, headers=_BROWSER_HEADERS)
         response.raise_for_status()
         return response.text
     except requests.RequestException as exc:
@@ -44,9 +54,14 @@ def _fetch(url: str) -> Optional[str]:
         return None
 
 
-def _dates_in_horizon(dates: set[date], days_ahead: int) -> list[date]:
+def _dates_in_horizon(source_name: str, dates: set[date], days_ahead: int) -> list[date]:
     today = date.today()
     horizon = today + timedelta(days=days_ahead)
+    upcoming_any = sorted(d for d in dates if d >= today)
+    logger.info(
+        "%s: %d Termin(e) auf der Seite gefunden, nächster: %s",
+        source_name, len(dates), upcoming_any[0].isoformat() if upcoming_any else "keiner",
+    )
     return sorted(d for d in dates if today <= d <= horizon)
 
 
@@ -81,7 +96,7 @@ def get_fomc_dates(days_ahead: int) -> tuple[date, ...]:
             except ValueError:
                 continue
 
-    return tuple(_dates_in_horizon(dates, days_ahead))
+    return tuple(_dates_in_horizon("FOMC", dates, days_ahead))
 
 
 @lru_cache(maxsize=8)
@@ -99,7 +114,7 @@ def get_ecb_dates(days_ahead: int) -> tuple[date, ...]:
         except ValueError:
             continue
 
-    return tuple(_dates_in_horizon(dates, days_ahead))
+    return tuple(_dates_in_horizon("EZB", dates, days_ahead))
 
 
 @lru_cache(maxsize=8)
@@ -117,4 +132,4 @@ def get_cpi_dates(days_ahead: int) -> tuple[date, ...]:
         except ValueError:
             continue
 
-    return tuple(_dates_in_horizon(dates, days_ahead))
+    return tuple(_dates_in_horizon("BLS-CPI", dates, days_ahead))
