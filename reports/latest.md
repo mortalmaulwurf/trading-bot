@@ -1,54 +1,38 @@
-# Swing-Trading Scan – 2026-10-10T01:36:51.340627+00:00
+# Swing-Trading Scan – 2026-10-13T02:56:36.640910+00:00
 
-Analysiert: 9 Ticker · Treffer: 4 (Schwelle: ±1.5% um POC/VAL)
+Analysiert: 9 Ticker · Treffer: 2 (Schwelle: ±1.5% um POC/VAL)
 
 ## Treffer
 
-### WTI-Rohöl (CL=F) – moderat
-- Kurs: 91.66 USD · Level: POC @ 91.1795 (Abstand +0.53%)
-- Volumenprofil: POC 91.1795 · VAL 77.281 · VAH 99.226
-- Langfristiges Volumenprofil (Kontext): POC 60.355 · VAL 54.98 · VAH 91.53
-- Wochentrend: aufwärts (✅ im Einklang mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 49.7 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Größenvorschlag (max. 10€ Risiko, Stop 76.5082 / 16.53% Abstand): ~0.74 Stück · Positionswert ~60.49€ · Margin bei 2er-Hebel ~30.25€
-
-### DAX (EXS1.DE) – moderat
-- Kurs: 204.45 EUR · Level: POC @ 205.6065 (Abstand -0.56%)
-- Volumenprofil: POC 205.6065 · VAL 199.314 · VAH 211.06
-- Langfristiges Volumenprofil (Kontext): POC 205.9575 · VAL 196.32 · VAH 210.455 — ✅ Konfluenz mit langfristiges POC
-- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 36.7 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Größenvorschlag (max. 10€ Risiko, Stop 197.3209 / 3.49% Abstand): ~1.40 Stück · Positionswert ~286.78€ · Margin bei 2er-Hebel ~143.39€
-
 ### Gold (GC=F) – moderat
-- Kurs: 4220.2998 USD · Level: VAL @ 4179.9366 (Abstand +0.97%)
-- Volumenprofil: POC 4388.435 · VAL 4179.9366 · VAH 4789.3935
+- Kurs: 4196.6001 USD · Level: VAL @ 4179.9366 (Abstand +0.40%)
+- Volumenprofil: POC 4388.435 · VAL 4179.9366 · VAH 4757.3168
 - Langfristiges Volumenprofil (Kontext): POC 4097.8717 · VAL 3957.4634 · VAH 4631.4234 — ✅ Konfluenz mit langfristiges POC
 - Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 44.0 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Größenvorschlag (max. 10€ Risiko, Stop 4138.1373 / 1.95% Abstand): ~0.14 Stück · Positionswert ~513.65€ · Margin bei 2er-Hebel ~256.83€
+- Bestätigungen (1/3): RSI 41.9 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Größenvorschlag (max. 10€ Risiko, Stop 4138.1373 / 1.39% Abstand): ~0.19 Stück · Positionswert ~717.82€ · Margin bei 2er-Hebel ~358.91€
 
-### RWE (RWE.DE) – moderat
-- Kurs: 57.24 EUR · Level: POC @ 56.424 (Abstand +1.45%)
-- Volumenprofil: POC 56.424 · VAL 54.656 · VAH 59.008
-- Langfristiges Volumenprofil (Kontext): POC 56.34 · VAL 50.68 · VAH 60.4907 — ✅ Konfluenz mit langfristiges POC
+### DAX (EXS1.DE) – stark
+- Kurs: 206.8 EUR · Level: POC @ 205.8758 (Abstand +0.45%)
+- Volumenprofil: POC 205.8758 · VAL 199.2827 · VAH 210.9177
+- Langfristiges Volumenprofil (Kontext): POC 205.9575 · VAL 196.32 · VAH 210.455 — ✅ Konfluenz mit langfristiges POC
 - Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 39.8 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Größenvorschlag (max. 10€ Risiko, Stop 54.1094 / 5.47% Abstand): ~3.19 Stück · Positionswert ~182.84€ · Margin bei 2er-Hebel ~91.42€
+- Bestätigungen (2/3): RSI 43.5 · Volumen-Spike ja · Intraday-Momentum dreht hoch
+- Größenvorschlag (max. 10€ Risiko, Stop 197.2898 / 4.60% Abstand): ~1.05 Stück · Positionswert ~217.45€ · Margin bei 2er-Hebel ~108.73€
 
 ## Alle beobachteten Instrumente
 
 | Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |
 |---|---|---|---|---|---|---|
-| Procter & Gamble (PG) | 151.23 USD | POC @ 144.271 | +4.82% | 62.1 | aufwärts | – |
-| Walmart (WMT) | 111.35 USD | POC @ 106.0012 | +5.05% | 60.9 | aufwärts | – |
-| McDonald's (MCD) | 235.23 USD | VAL @ 254.202 | -7.46% | 36.7 | abwärts | – |
-| RWE (RWE.DE) | 57.24 EUR | POC @ 56.424 | +1.45% | 39.8 | abwärts | ✅ |
-| S&P 500 (SPY) | 778.57 USD | POC @ 737.8533 | +5.52% | 59.9 | aufwärts | – |
-| Nasdaq 100 (QQQ) | 751.27 USD | POC @ 719.0142 | +4.49% | 60.9 | aufwärts | – |
-| DAX (EXS1.DE) | 204.45 EUR | POC @ 205.6065 | -0.56% | 36.7 | abwärts | ✅ |
-| Gold (GC=F) | 4220.2998 USD | VAL @ 4179.9366 | +0.97% | 44.0 | abwärts | ✅ |
-| WTI-Rohöl (CL=F) | 91.66 USD | POC @ 91.1795 | +0.53% | 49.7 | aufwärts | ✅ |
+| Procter & Gamble (PG) | 153.2 USD | POC @ 145.817 | +5.06% | 66.0 | aufwärts | – |
+| Walmart (WMT) | 113.08 USD | POC @ 106.0012 | +6.68% | 64.7 | aufwärts | – |
+| McDonald's (MCD) | 235.65 USD | VAL @ 254.202 | -7.30% | 37.6 | abwärts | – |
+| RWE (RWE.DE) | 57.94 EUR | POC @ 56.424 | +2.69% | 45.0 | abwärts | – |
+| S&P 500 (SPY) | 778.1 USD | POC @ 738.6902 | +5.34% | 59.3 | aufwärts | – |
+| Nasdaq 100 (QQQ) | 746.04 USD | POC @ 718.2 | +3.88% | 56.6 | aufwärts | – |
+| DAX (EXS1.DE) | 206.8 EUR | POC @ 205.8758 | +0.45% | 43.5 | abwärts | ✅ |
+| Gold (GC=F) | 4196.6001 USD | VAL @ 4179.9366 | +0.40% | 41.9 | abwärts | ✅ |
+| WTI-Rohöl (CL=F) | 92.67 USD | POC @ 91.1795 | +1.63% | 51.7 | aufwärts | – |
 
 ---
 _Nur zur Analyse-Unterstützung, keine automatisch ausgeführten Trades. Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter (config/settings.yaml) und einer vereinfachten Stop-Referenz (1% unter VAL). Termine sind Näherungswerte (Earnings via yfinance-Schätzung, Makro-Termine manuell in config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._
