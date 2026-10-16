@@ -19,6 +19,24 @@ def fetch_daily(ticker: str, lookback_days: int) -> pd.DataFrame:
     return df.dropna(subset=["Open", "High", "Low", "Close", "Volume"])
 
 
+def fetch_index_ratio(proxy_symbol: str, index_symbol: str) -> float:
+    """Ratio index close / proxy close on the latest common trading day.
+
+    Volume profiles are computed on a liquid proxy (ETF); knock-out certificates
+    reference the index, so levels are multiplied by this ratio to get index levels.
+    """
+    proxy = fetch_daily(proxy_symbol, 14)["Close"]
+    index = fetch_daily(index_symbol, 14)["Close"]
+    # Compare by calendar date: the two series can carry different timezones.
+    proxy.index = pd.to_datetime(proxy.index.date)
+    index.index = pd.to_datetime(index.index.date)
+    joined = pd.concat([proxy.rename("proxy"), index.rename("index")], axis=1, join="inner").dropna()
+    if joined.empty:
+        raise ValueError(f"Keine gemeinsamen Handelstage für {proxy_symbol} und {index_symbol}")
+    last = joined.iloc[-1]
+    return float(last["index"] / last["proxy"])
+
+
 def fetch_intraday(ticker: str, interval: str, lookback_days: int) -> pd.DataFrame:
     end = dt.datetime.now(dt.timezone.utc)
     start = end - dt.timedelta(days=lookback_days)

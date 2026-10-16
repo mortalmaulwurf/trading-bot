@@ -5,6 +5,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .config import RiskSettings
 from .html_report import render_html
 from .signal_engine import TickerAnalysis
 
@@ -40,23 +41,59 @@ def _analysis_to_dict(a: TickerAnalysis) -> dict:
         d["long_poc"] = round(a.long_profile.poc, 4)
         d["long_val"] = round(a.long_profile.val, 4)
         d["long_vah"] = round(a.long_profile.vah, 4)
+    d["is_actionable"] = a.is_actionable
+    d["is_a_setup"] = a.is_a_setup
     if a.position_suggestion:
         p = a.position_suggestion
-        d["position_suggestion"] = {
+        suggestion = {
             "entry_price": round(p.entry_price, 4),
             "stop_price": round(p.stop_price, 4),
+            "target_price": round(p.target_price, 4) if p.target_price is not None else None,
+            "target_name": a.target_name,
             "stop_distance_pct": round(p.stop_distance_pct, 2),
-            "shares": round(p.shares, 2),
-            "position_value_eur": round(p.position_value_eur, 2),
-            "margin_required_eur": round(p.margin_required_eur, 2),
+            "leverage": p.leverage,
+            "max_leverage_by_buffer": p.max_leverage_by_buffer,
+            "min_ko_distance_pct": round(p.min_ko_distance_pct, 2),
+            "ko_level": round(p.ko_level, 4),
+            "capital_eur": round(p.capital_eur, 2),
+            "exposure_eur": round(p.exposure_eur, 2),
+            "costs_eur": round(p.costs_eur, 2),
+            "total_loss_eur": round(p.total_loss_eur, 2),
+            "capped": p.capped,
+            "gross_crv": round(p.gross_crv, 2) if p.gross_crv is not None else None,
+            "net_crv": round(p.net_crv, 2) if p.net_crv is not None else None,
+            "required_target_price": round(p.required_target_price, 4),
+            "required_target_pct": round(p.required_target_pct, 2),
         }
+        if a.index_ratio:
+            ratio = a.index_ratio
+            suggestion["index_levels"] = {
+                "entry": round(p.entry_price * ratio, 2),
+                "stop": round(p.stop_price * ratio, 2),
+                "target": round(p.target_price * ratio, 2) if p.target_price is not None else None,
+                "required_target": round(p.required_target_price * ratio, 2),
+            }
+        d["position_suggestion"] = suggestion
     return d
 
 
-def build_report(results: list[TickerAnalysis], errors: dict[str, str], threshold_pct: float) -> dict:
+def build_report(
+    results: list[TickerAnalysis],
+    errors: dict[str, str],
+    threshold_pct: float,
+    risk_settings: RiskSettings,
+) -> dict:
     now = datetime.now(timezone.utc)
     hits = [r for r in results if r.is_hit]
+    alerts = sorted(
+        (r for r in results if r.is_actionable),
+        key=lambda r: (not r.is_a_setup, -(r.position_suggestion.net_crv or 0)),
+    )
     return {
+        "min_net_crv": risk_settings.min_net_crv,
+        "a_setup_net_crv": risk_settings.a_setup_net_crv,
+        "alerts_count": len(alerts),
+        "alerts": [_analysis_to_dict(r) for r in alerts],
         "generated_at_utc": now.isoformat(),
         "proximity_threshold_pct": threshold_pct,
         "tickers_analyzed": len(results),
@@ -67,6 +104,44 @@ def build_report(results: list[TickerAnalysis], errors: dict[str, str], threshol
     }
 
 
+def format_plan_lines_md(h: dict, report: dict) -> list[str]:
+    """Plan lines (entry, stop, target, leverage, costs, net CRV) for one hit."""
+    p = h.get("position_suggestion")
+    if not p:
+        return ["- Plan: kein Plan berechenbar (Stop nicht unter dem Kurs)."]
+    target = (
+        f"{p['target_price']} ({p['target_name']})" if p["target_price"] is not None else "kein Level oberhalb"
+    )
+    lines = [
+        f"- Plan (Long): Einstieg {p['entry_price']} · Stop {p['stop_price']} "
+        f"({p['stop_distance_pct']:.2f}% Abstand, Level minus ATR) · Ziel {target}",
+        f"- Hebel {p['leverage']}× (max. {p['max_leverage_by_buffer']}× nach KO-Puffer, KO-Abstand mind. "
+        f"{p['min_ko_distance_pct']:.2f}%) · Einsatz {p['capital_eur']:.2f}€ · "
+        f"Kosten {p['costs_eur']:.2f}€ · Verlust am Stop {p['total_loss_eur']:.2f}€",
+    ]
+    if p["net_crv"] is not None:
+        if h.get("is_a_setup"):
+            verdict = "✅ A-Setup"
+        elif h.get("is_actionable"):
+            verdict = "✅ Mindest-CRV erfüllt"
+        else:
+            verdict = f"❌ unter Mindest {report['min_net_crv']}:1"
+        lines.append(f"- CRV brutto {p['gross_crv']}:1 · netto {p['net_crv']}:1 ({verdict})")
+    else:
+        lines.append("- CRV: nicht berechenbar (kein Ziel-Level oberhalb des Kurses)")
+    lines.append(
+        f"- Mindest-Ziel für {report['min_net_crv']}:1 netto: {p['required_target_price']} "
+        f"(+{p['required_target_pct']:.2f}%)"
+    )
+    idx = p.get("index_levels")
+    if idx:
+        lines.append(
+            f"- Indexwerte für Rechner/Zertifikat: Einstieg {idx['entry']} · Stop {idx['stop']} · "
+            f"Ziel {idx['target']} · Mindest-Ziel {idx['required_target']}"
+        )
+    return lines
+
+
 def _format_markdown(report: dict) -> str:
     lines = [
         f"# Swing-Trading Scan – {report['generated_at_utc']}",
@@ -75,6 +150,13 @@ def _format_markdown(report: dict) -> str:
         f"(Schwelle: ±{report['proximity_threshold_pct']}% um POC/VAL)",
         "",
     ]
+
+    if report["alerts"]:
+        lines.append(f"## Setups (Telegram-Alarm, Netto-CRV ≥ {report['min_net_crv']}:1)\n")
+        for a in report["alerts"]:
+            tag = "A-Setup" if a.get("is_a_setup") else "Setup"
+            lines.append(f"- **{a['name']} ({a['ticker']})** – {tag}, {a['confirmations']}/3 Bestätigungen")
+        lines.append("")
 
     if report["hits"]:
         lines.append("## Treffer\n")
@@ -103,14 +185,7 @@ def _format_markdown(report: dict) -> str:
                 f"Volumen-Spike {'ja' if h['volume_spike'] else 'nein'} · "
                 f"Intraday-Momentum {'dreht hoch' if h['intraday_momentum_up'] else 'neutral'}"
             )
-            if "position_suggestion" in h:
-                p = h["position_suggestion"]
-                lines.append(
-                    f"- Größenvorschlag (max. 10€ Risiko, Stop {p['stop_price']} / "
-                    f"{p['stop_distance_pct']:.2f}% Abstand): ~{p['shares']:.2f} Stück · "
-                    f"Positionswert ~{p['position_value_eur']:.2f}€ · "
-                    f"Margin bei 2er-Hebel ~{p['margin_required_eur']:.2f}€"
-                )
+            lines.extend(format_plan_lines_md(h, report))
             lines.append("")
     else:
         lines.append("_Keine Treffer in diesem Lauf._\n")
@@ -140,8 +215,8 @@ def _format_markdown(report: dict) -> str:
 
     lines.append(
         "\n---\n_Nur zur Analyse-Unterstützung, keine automatisch ausgeführten Trades. "
-        "Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter "
-        "(config/settings.yaml) und einer vereinfachten Stop-Referenz (1% unter VAL). "
+        "Pläne und Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter "
+        "(config/settings.yaml) und einer vereinfachten Stop-Referenz (Level minus ATR). Das Ziel ist das nächste strukturelle Level oberhalb des Kurses. "
         "Termine sind Näherungswerte (Earnings via yfinance-Schätzung, Makro-Termine manuell in "
         "config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._\n\n"
         "_**Glossar:** POC = Point of Control (Preis mit dem höchsten Handelsvolumen im Zeitraum) · "
