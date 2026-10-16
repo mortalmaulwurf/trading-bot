@@ -60,3 +60,12 @@ def format_alerts_message(report: dict, site_url: str = "") -> str:
         lines.append(f"\n🔗 Volle Übersicht: {site_url}")
     lines.append("\nDetails siehe Report im Repo (reports/latest.md).")
     return "\n".join(lines)
+
+
+def format_error_message(errors: dict[str, str]) -> str:
+    """Immediate Telegram text when individual tickers failed during a scan."""
+    safe = lambda text: "".join(ch for ch in str(text) if ch not in "_*`[]")  # noqa: E731
+    lines = [f"⚠️ *Scan-Fehler* bei {len(errors)} Ticker(n):"]
+    for ticker, err in errors.items():
+        lines.append(f"• {safe(ticker)}: {safe(err)[:150]}")
+    return "\n".join(lines)

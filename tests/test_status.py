@@ -74,5 +74,15 @@ class MorningStatusTest(unittest.TestCase):
         self.assertIn("Fehler bei: ABC", text)
 
 
+class ErrorMessageTest(unittest.TestCase):
+    def test_error_message_lists_tickers_and_strips_markdown(self):
+        from src.notifier import format_error_message
+
+        text = format_error_message({"GC=F": "Keine Daten_für [GC]", "SPY": "x" * 400})
+        self.assertIn("2 Ticker", text)
+        self.assertIn("GC=F: Keine Datenfür GC", text)
+        self.assertLess(len(text), 400)
+
+
 if __name__ == "__main__":
     unittest.main()
