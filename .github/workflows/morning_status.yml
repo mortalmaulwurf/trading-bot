@@ -1,0 +1,35 @@
+name: Morning Status
+
+on:
+  schedule:
+    # GitHub cron runs in UTC only. 08:00 Berlin is 06:00 UTC in summer time and 07:00 UTC in winter time,
+    # so both are scheduled; src.status only sends when it is actually 08:xx in Europe/Berlin.
+    - cron: "0 6 * * 1-5"
+    - cron: "0 7 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Send status
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        # A manual run always sends, regardless of the time of day.
+        run: python -m src.status ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
