@@ -20,9 +20,18 @@ load_dotenv(REPO_ROOT / ".env")
 @dataclass(frozen=True)
 class RiskSettings:
     total_capital_eur: float
-    shot_size_eur: float
+    max_position_eur: float
     max_risk_per_trade_eur: float
-    leverage: float
+    ko_buffer: float
+    max_leverage: int
+    fee_per_order_eur: float
+    min_free_order_volume_eur: float
+    spread_pct: float
+    risk_includes_costs: bool
+    min_net_crv: float
+    a_setup_net_crv: float
+    atr_period: int
+    stop_atr_multiple: float
 
 
 @dataclass(frozen=True)
@@ -47,6 +56,7 @@ class AnalysisSettings:
 @dataclass(frozen=True)
 class NotificationSettings:
     site_url: str = ""
+    min_confirmations: int = 2
 
 
 @dataclass(frozen=True)
@@ -60,6 +70,9 @@ class Settings:
 class WatchlistEntry:
     symbol: str
     name: str
+    # Optional: underlying index symbol (e.g. "^GDAXI") used to translate ETF
+    # levels into index levels, because knock-out certificates reference the index.
+    index_symbol: Optional[str] = None
 
 
 def load_settings(path: Optional[Path] = None) -> Settings:
@@ -84,7 +97,13 @@ def load_watchlist(path: Optional[Path] = None) -> list[WatchlistEntry]:
         if isinstance(item, str):
             entries.append(WatchlistEntry(symbol=item, name=item))
         else:
-            entries.append(WatchlistEntry(symbol=item["symbol"], name=item.get("name", item["symbol"])))
+            entries.append(
+                WatchlistEntry(
+                    symbol=item["symbol"],
+                    name=item.get("name", item["symbol"]),
+                    index_symbol=item.get("index_symbol"),
+                )
+            )
     return entries
 
 

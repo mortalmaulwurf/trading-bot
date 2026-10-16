@@ -33,10 +33,23 @@ Diskussion.
    **Wochentrend-Filter** abgeleitet (aktueller Wochenschluss über/unter
    dem gleitenden Durchschnitt der letzten 10 Wochen) – als Kontext, ob
    der übergeordnete Trend für oder gegen einen Long-Einstieg spricht.
-6. Bei einem Treffer wird zusätzlich ein informativer
-   Positionsgrößen-Vorschlag berechnet, basierend auf dem Risikorahmen aus
-   `config/settings.yaml` (max. Risiko pro Trade, Hebel) und einer
-   vereinfachten Stop-Referenz (1% unter VAL).
+6. Bei einem Treffer wird ein informativer **Plan (Long)** berechnet:
+   Stop = getroffenes Level minus ATR, Ziel = nächstes strukturelles Level
+   oberhalb des Kurses (POC/VAH, kurz- oder langfristig). Daraus ergeben sich
+   der **variable Hebel** (höchster Hebel, bei dem die KO-Schwelle noch
+   `ko_buffer` weiter als der Stop entfernt liegt, gedeckelt bei
+   `max_leverage`), der Einsatz (max. Risiko pro Trade, optional inkl.
+   Gebühren und Spread), das **Brutto- und Netto-CRV** und das Mindest-Ziel
+   für das geforderte Netto-CRV. Bei Index-ETFs werden Einstieg, Stop und Ziel
+   zusätzlich in **Indexwerte** umgerechnet (`index_symbol` in der Watchlist),
+   weil die Knock-out-Zertifikate auf den Index laufen.
+   Alle Parameter stehen in `config/settings.yaml`.
+
+   **Telegram-Alarm** gibt es nur, wenn ein Treffer mindestens
+   `notifications.min_confirmations` Bestätigungen hat **und** das Netto-CRV
+   mindestens `risk.min_net_crv` erreicht (Standard 2:1; ab
+   `risk.a_setup_net_crv`, Standard 3:1, als "A-Setup" markiert). Alle
+   übrigen Treffer stehen weiter im Report, lösen aber keinen Push aus.
 7. Für jeden Ticker wird geprüft, ob in den nächsten 7 Tagen (Standard)
    **Quartalszahlen** (via yfinance) oder ein bekannter **Makro-Termin**
    (z.B. Fed-Zinsentscheid) anstehen. Der US-Arbeitsmarktbericht wird

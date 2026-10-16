@@ -56,13 +56,27 @@ def _hit_card(h: dict) -> str:
         f'Intraday-Momentum {"dreht hoch" if h["intraday_momentum_up"] else "neutral"}</p>'
     )
 
-    if "position_suggestion" in h:
-        p = h["position_suggestion"]
-        parts.append(
-            f'<p class="muted">Größenvorschlag (max. 10€ Risiko, Stop {_esc(p["stop_price"])}): '
-            f'~{p["shares"]:.2f} Stück · Positionswert ~{p["position_value_eur"]:.2f}€ · '
-            f'Margin bei 2er-Hebel ~{p["margin_required_eur"]:.2f}€</p>'
+    p = h.get("position_suggestion")
+    if p:
+        target = f'{_esc(p["target_price"])} ({_esc(h.get("target_name"))})' if p["target_price"] is not None else "kein Level oberhalb"
+        crv = (
+            f'CRV brutto {p["gross_crv"]}:1 · netto {p["net_crv"]}:1'
+            if p["net_crv"] is not None
+            else "CRV nicht berechenbar"
         )
+        tag = " · ✅ A-Setup" if h.get("is_a_setup") else (" · ✅ Mindest-CRV erfüllt" if h.get("is_actionable") else "")
+        parts.append(
+            f'<p class="muted">Plan (Long): Einstieg {_esc(p["entry_price"])} · Stop {_esc(p["stop_price"])} '
+            f'({p["stop_distance_pct"]:.2f}%) · Ziel {target}<br>'
+            f'Hebel {p["leverage"]}× · Einsatz {p["capital_eur"]:.2f}€ · Kosten {p["costs_eur"]:.2f}€ · '
+            f'Verlust am Stop {p["total_loss_eur"]:.2f}€<br>{crv}{tag}</p>'
+        )
+        idx = p.get("index_levels")
+        if idx:
+            parts.append(
+                f'<p class="muted">Indexwerte: Einstieg {_esc(idx["entry"])} · Stop {_esc(idx["stop"])} · '
+                f'Ziel {_esc(idx["target"])} · Mindest-Ziel {_esc(idx["required_target"])}</p>'
+            )
 
     parts.append("</div>")
     return "\n".join(parts)

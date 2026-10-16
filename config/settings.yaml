@@ -3,9 +3,27 @@
 
 risk:
   total_capital_eur: 300
-  shot_size_eur: 100
+  # Hard cap for the capital put into a single position (one position at a time).
+  max_position_eur: 300
   max_risk_per_trade_eur: 10
-  leverage: 2
+  # Leverage is not fixed: it is chosen per trade as the highest leverage whose
+  # knock-out barrier is still at least (1 + ko_buffer) * stop distance away,
+  # capped at max_leverage.
+  ko_buffer: 0.5
+  max_leverage: 10
+  # finanzen.net zero: orders below the free-volume threshold cost a flat fee per order.
+  fee_per_order_eur: 1.0
+  min_free_order_volume_eur: 500
+  # Assumed round-trip spread in % of the certificate price. Replace with the real value from the app.
+  spread_pct: 0.5
+  # true: the max risk budget includes fees and spread (strict); false: costs on top.
+  risk_includes_costs: true
+  # Net risk/reward (after fees and spread) needed to raise an alert / to be labelled "A-Setup".
+  min_net_crv: 2.0
+  a_setup_net_crv: 3.0
+  # Stop reference: hit level minus this multiple of the daily ATR.
+  atr_period: 14
+  stop_atr_multiple: 1.0
 
 analysis:
   # Wie viele Kalendertage Daily-Historie für das Volumenprofil geladen werden
@@ -38,6 +56,9 @@ analysis:
   upcoming_events_days_ahead: 7
 
 notifications:
+  # Telegram only fires for hits with at least this many confirmations (of 3)
+  # AND a net risk/reward >= risk.min_net_crv. Everything else stays in the report.
+  min_confirmations: 2
   # Optionale URL der gehosteten HTML-Übersichtsseite (z.B. Render Static
   # Site, siehe README "Online-Übersicht"). Wird an Telegram-Nachrichten
   # angehängt, falls gesetzt. Leer lassen, wenn (noch) nicht gehostet.

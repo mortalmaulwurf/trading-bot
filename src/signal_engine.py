@@ -9,7 +9,7 @@ import pandas as pd
 
 from . import indicators
 from .config import AnalysisSettings, RiskSettings
-from .data_fetcher import fetch_daily, fetch_intraday, get_currency, resample_to_4h
+from .data_fetcher import fetch_daily, fetch_index_ratio, fetch_intraday, get_currency, resample_to_4h
 from .events import get_upcoming_events
 from .risk import PositionSuggestion, suggest_position
 from .volume_profile import VolumeProfile, compute_volume_profile
@@ -41,6 +41,11 @@ class TickerAnalysis:
     weekly_trend: Optional[str]
     weekly_sma: Optional[float]
     upcoming_events: list[str]
+    atr_value: Optional[float] = None
+    target_name: Optional[str] = None
+    is_actionable: bool = False
+    is_a_setup: bool = False
+    index_ratio: Optional[float] = None
 
 
 def _confidence_label(confirmations: int) -> str:
@@ -51,12 +56,22 @@ def _confidence_label(confirmations: int) -> str:
     return "schwach (nur Level-Nähe)"
 
 
+def _next_level_above(price: float, levels: dict[str, float]) -> tuple[Optional[str], Optional[float]]:
+    """Nearest structural level above the price (used as the target), or (None, None)."""
+    above = {name: lvl for name, lvl in levels.items() if lvl > price * 1.003}
+    if not above:
+        return None, None
+    name = min(above, key=above.get)
+    return name, above[name]
+
+
 def analyze_ticker(
     ticker: str,
     analysis_settings: AnalysisSettings,
     risk_settings: RiskSettings,
-    fx_rate_usd_eur: float,
     display_name: Optional[str] = None,
+    index_symbol: Optional[str] = None,
+    min_confirmations: int = 2,
 ) -> TickerAnalysis:
     daily = fetch_daily(ticker, analysis_settings.lookback_days_daily)
     profile = compute_volume_profile(
@@ -97,13 +112,6 @@ def analyze_ticker(
 
     confirmations = sum([rsi_oversold, volume_spike, intraday_momentum_up])
 
-    position_suggestion = None
-    if is_hit:
-        fx_rate = 1.0 if currency == "EUR" else fx_rate_usd_eur
-        # Stop-Referenz nur zur Größenberechnung: 1% Puffer unter VAL, keine Handelsempfehlung.
-        stop_price = profile.val * 0.99
-        position_suggestion = suggest_position(current_price, stop_price, currency, fx_rate, risk_settings)
-
     # Langfristiges Volumenprofil (Konfluenz) und Wochentrend – beides nur
     # Zusatzkontext, kein Ausschlusskriterium; scheitert der Abruf, läuft die
     # Kernanalyse trotzdem weiter (analog zur Intraday-Komponente oben).
@@ -139,6 +147,42 @@ def analyze_ticker(
     except Exception as exc:
         logger.warning("Bevorstehende Termine für %s nicht abrufbar: %s", ticker, exc)
 
+    # Plan (long only): stop = hit level minus ATR, target = nearest structural level above the price.
+    # Informational only; sizing and net CRV follow the risk settings.
+    atr_value = indicators.atr(daily, period=risk_settings.atr_period)
+    if atr_value is not None:
+        stop_price = nearest_price - atr_value * risk_settings.stop_atr_multiple
+    else:
+        stop_price = nearest_price * 0.99  # fallback without ATR: 1% below the level
+    target_levels = {"POC": profile.poc, "VAH": profile.vah}
+    if long_profile is not None:
+        target_levels.update(
+            {"langfristiges POC": long_profile.poc, "langfristiges VAH": long_profile.vah}
+        )
+    target_name, target_price = _next_level_above(current_price, target_levels)
+
+    position_suggestion = None
+    if is_hit:
+        position_suggestion = suggest_position(current_price, stop_price, target_price, currency, risk_settings)
+
+    is_actionable = bool(
+        is_hit
+        and confirmations >= min_confirmations
+        and position_suggestion is not None
+        and position_suggestion.net_crv is not None
+        and position_suggestion.net_crv >= risk_settings.min_net_crv
+    )
+    is_a_setup = bool(
+        is_actionable and position_suggestion.net_crv >= risk_settings.a_setup_net_crv
+    )
+
+    index_ratio = None
+    if index_symbol and is_hit:
+        try:
+            index_ratio = fetch_index_ratio(ticker, index_symbol)
+        except Exception as exc:
+            logger.warning("Index-Umrechnung für %s (%s) nicht verfügbar: %s", ticker, index_symbol, exc)
+
     return TickerAnalysis(
         ticker=ticker,
         display_name=display_name or ticker,
@@ -162,4 +206,9 @@ def analyze_ticker(
         weekly_trend=weekly_trend_value,
         weekly_sma=weekly_sma,
         upcoming_events=upcoming_events,
+        atr_value=atr_value,
+        target_name=target_name,
+        is_actionable=is_actionable,
+        is_a_setup=is_a_setup,
+        index_ratio=index_ratio,
     )

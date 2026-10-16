@@ -1,4 +1,4 @@
-"""Einfache technische Indikatoren: RSI, Volumen-Spike, Intraday-Momentum, Wochentrend."""
+"""Einfache technische Indikatoren: RSI, ATR, Volumen-Spike, Intraday-Momentum, Wochentrend."""
 from __future__ import annotations
 
 from typing import Optional
@@ -49,3 +49,16 @@ def weekly_trend(daily_df: pd.DataFrame, sma_periods: int = 10) -> tuple[Optiona
     last_close = float(weekly_close.iloc[-1])
     trend = "aufwärts" if last_close > sma else "abwärts"
     return trend, sma
+
+
+def atr(df: pd.DataFrame, period: int = 14) -> Optional[float]:
+    """Average True Range (Wilder smoothing) of the last bar, or None if there is not enough data."""
+    if len(df) < period + 1:
+        return None
+    prev_close = df["Close"].shift(1)
+    true_range = pd.concat(
+        [df["High"] - df["Low"], (df["High"] - prev_close).abs(), (df["Low"] - prev_close).abs()],
+        axis=1,
+    ).max(axis=1)
+    value = true_range.ewm(alpha=1 / period, min_periods=period, adjust=False).mean().iloc[-1]
+    return None if pd.isna(value) else float(value)

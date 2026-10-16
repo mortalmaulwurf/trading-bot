@@ -26,9 +26,11 @@ def send_telegram_message(token: str, chat_id: str, text: str) -> bool:
         return False
 
 
-def format_hits_message(report: dict, site_url: str = "") -> str:
-    lines = [f"📊 *Swing-Trading Scan* – {report['hits_count']} Treffer"]
-    for h in report["hits"]:
+def format_alerts_message(report: dict, site_url: str = "") -> str:
+    """Telegram text for setups that passed the confirmation and net-CRV filters."""
+    lines = [f"🔔 *Setup-Alarm* – {report['alerts_count']} Setup(s)"]
+    for h in report["alerts"]:
+        tag = "A-Setup" if h.get("is_a_setup") else "Setup"
         extra = []
         if h.get("confluence"):
             extra.append(f"✅ Konfluenz mit {h['confluence_level_name']}")
@@ -39,11 +41,20 @@ def format_hits_message(report: dict, site_url: str = "") -> str:
         if h.get("upcoming_events"):
             extra.append(f"⚠️ Termin: {'; '.join(h['upcoming_events'])}")
         extra_line = f"\n{' · '.join(extra)}" if extra else ""
+
+        p = h["position_suggestion"]
+        plan = (
+            f"Einstieg {p['entry_price']} · Stop {p['stop_price']} · Ziel {p['target_price']}\n"
+            f"Hebel {p['leverage']}× · Einsatz {p['capital_eur']:.0f}€ · Netto-CRV {p['net_crv']}:1"
+        )
+        idx = p.get("index_levels")
+        if idx:
+            plan += f"\nIndex: Einstieg {idx['entry']} · Stop {idx['stop']} · Ziel {idx['target']}"
         lines.append(
-            f"\n*{h['name']}* ({h['ticker']}) ({h['confidence']})\n"
+            f"\n*{h['name']}* ({h['ticker']}) – {tag}\n"
             f"Kurs {h['current_price']} {h['currency']} · {h['nearest_level_name']} @ {h['nearest_level_price']} "
             f"({h['distance_pct']:+.2f}%)\n"
-            f"Bestätigungen: {h['confirmations']}/3{extra_line}"
+            f"Bestätigungen: {h['confirmations']}/3{extra_line}\n{plan}"
         )
     if site_url:
         lines.append(f"\n🔗 Volle Übersicht: {site_url}")

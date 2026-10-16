@@ -10,25 +10,30 @@
 # Schwellenwerte in %) funktioniert unverändert für jeden Ticker-Typ.
 
 tickers:
-  # Einzelaktien
-  - symbol: PG
-    name: "Procter & Gamble"
-  - symbol: WMT
-    name: "Walmart"
-  - symbol: MCD
-    name: "McDonald's"
-  - symbol: RWE.DE
-    name: "RWE"
+  # Einzelaktien - pausiert (Fokus aktuell auf Indizes und Rohstoffe).
+  # Zum Reaktivieren die Kommentarzeichen entfernen.
+  # - symbol: PG
+  #   name: "Procter & Gamble"
+  # - symbol: WMT
+  #   name: "Walmart"
+  # - symbol: MCD
+  #   name: "McDonald's"
+  # - symbol: RWE.DE
+  #   name: "RWE"
 
   # Große Indizes – als liquide ETFs abgebildet, da Index-Ticker (^GSPC etc.)
   # bei yfinance kein verlässliches Handelsvolumen liefern, das Volumenprofil
   # aber echtes Volumen braucht.
+  # index_symbol (optional): Basis fuer die Umrechnung der ETF-Level in Indexwerte,
+  # weil die Knock-out-Zertifikate auf den Index laufen.
+  # Nasdaq 100 (QQQ) ist bewusst nicht mehr dabei: laeuft zu eng mit dem S&P 500
+  # (Regel: ein Aktienindex gleichzeitig).
   - symbol: SPY
     name: "S&P 500"
-  - symbol: QQQ
-    name: "Nasdaq 100"
+    index_symbol: "^GSPC"
   - symbol: EXS1.DE
     name: "DAX"
+    index_symbol: "^GDAXI"
 
   # Rohstoffe – als Frontmonat-Futures, weil deren Handelsvolumen die
   # tatsächliche Marktaktivität widerspiegelt (Standard-Basis für
