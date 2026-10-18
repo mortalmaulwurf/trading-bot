@@ -45,11 +45,25 @@ Diskussion.
    weil die Knock-out-Zertifikate auf den Index laufen.
    Alle Parameter stehen in `config/settings.yaml`.
 
-   **Telegram-Alarm** gibt es nur, wenn ein Treffer mindestens
-   `notifications.min_confirmations` Bestätigungen hat **und** das Netto-CRV
-   mindestens `risk.min_net_crv` erreicht (Standard 2:1; ab
-   `risk.a_setup_net_crv`, Standard 3:1, als "A-Setup" markiert). Alle
-   übrigen Treffer stehen weiter im Report, lösen aber keinen Push aus.
+   **Telegram-Alarm** gibt es nur, wenn ein Treffer alle Regel-Checks besteht
+   (Stand Regelwerk Okt. 2026):
+
+   - **Bestätigte Umkehr auf Tagesbasis** (`analysis.require_daily_close_reversal`):
+     die Zone um das Level wurde in den letzten `reversal_lookback_bars`
+     Tageskerzen getestet (Tief ≤ Level + `reversal_test_tolerance_pct`) und
+     der letzte Tagesschluss liegt über dem Level.
+   - **Netto-CRV** mindestens `risk.min_net_crv` (Standard 3:1; ab
+     `risk.a_setup_net_crv`, Standard 4:1, als "A-Setup" markiert).
+   - Optional mindestens `notifications.min_confirmations` der Zusatzsignale
+     (RSI, Volumen-Spike, Intraday-Momentum; Standard 0).
+
+   Alle übrigen Treffer stehen weiter im Report (inkl. `rule_checks`, welche
+   Regel nicht erfüllt war), lösen aber keinen Push aus.
+
+   **Volumenprofil mit festem Startdatum:** `analysis.profile_anchor_date`
+   (z.B. `2026-09-18`) berechnet POC/VAL/VAH nur aus den Kerzen ab diesem Tag,
+   analog zum Fixed Range Volume Profile in TradingView. Ohne Datum gilt
+   `analysis.lookback_days_daily`.
 7. Für jeden Ticker wird geprüft, ob in den nächsten 7 Tagen (Standard)
    **Quartalszahlen** (via yfinance) oder ein bekannter **Makro-Termin**
    (z.B. Fed-Zinsentscheid) anstehen. Der US-Arbeitsmarktbericht wird
