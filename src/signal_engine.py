@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+import datetime as dt
+from dataclasses import dataclass, field
 from typing import Optional
 
 import pandas as pd
@@ -46,6 +47,9 @@ class TickerAnalysis:
     is_actionable: bool = False
     is_a_setup: bool = False
     index_ratio: Optional[float] = None
+    profile_basis: str = ""
+    daily_close_reversal: bool = False
+    rule_checks: dict[str, Optional[bool | float]] = field(default_factory=dict)
 
 
 def _confidence_label(confirmations: int) -> str:
@@ -65,6 +69,26 @@ def _next_level_above(price: float, levels: dict[str, float]) -> tuple[Optional[
     return name, above[name]
 
 
+def _select_profile_frame(
+    daily: pd.DataFrame, anchor_date: Optional[str], default_basis: str, min_bars: int = 10
+) -> tuple[pd.DataFrame, str]:
+    """Candles used for the profile: from the anchor date if set and long enough, else all."""
+    if not anchor_date:
+        return daily, default_basis
+    anchor = pd.Timestamp(str(anchor_date))
+    tz = getattr(daily.index, "tz", None)
+    if tz is not None:
+        anchor = anchor.tz_localize(tz)
+    anchored = daily[daily.index >= anchor]
+    if len(anchored) < min_bars:
+        logger.warning(
+            "Profil-Startdatum %s liefert nur %d Kerzen (< %d), nutze %s",
+            anchor_date, len(anchored), min_bars, default_basis,
+        )
+        return daily, default_basis
+    return anchored, f"ab {anchor.date().isoformat()}"
+
+
 def analyze_ticker(
     ticker: str,
     analysis_settings: AnalysisSettings,
@@ -73,9 +97,17 @@ def analyze_ticker(
     index_symbol: Optional[str] = None,
     min_confirmations: int = 2,
 ) -> TickerAnalysis:
-    daily = fetch_daily(ticker, analysis_settings.lookback_days_daily)
+    anchor_date = analysis_settings.profile_anchor_date
+    lookback_days = analysis_settings.lookback_days_daily
+    if anchor_date:
+        days_since_anchor = (dt.date.today() - dt.date.fromisoformat(str(anchor_date))).days
+        lookback_days = max(lookback_days, days_since_anchor + 7)
+    daily = fetch_daily(ticker, lookback_days)
+    profile_frame, profile_basis = _select_profile_frame(
+        daily, anchor_date, f"{analysis_settings.lookback_days_daily} Tage"
+    )
     profile = compute_volume_profile(
-        daily, bins=analysis_settings.volume_profile_bins, value_area_pct=analysis_settings.value_area_pct
+        profile_frame, bins=analysis_settings.volume_profile_bins, value_area_pct=analysis_settings.value_area_pct
     )
     current_price = float(daily["Close"].iloc[-1])
     currency = get_currency(ticker)
@@ -165,13 +197,28 @@ def analyze_ticker(
     if is_hit:
         position_suggestion = suggest_position(current_price, stop_price, target_price, currency, risk_settings)
 
-    is_actionable = bool(
-        is_hit
-        and confirmations >= min_confirmations
-        and position_suggestion is not None
-        and position_suggestion.net_crv is not None
-        and position_suggestion.net_crv >= risk_settings.min_net_crv
+    daily_reversal = indicators.daily_close_reversal(
+        daily,
+        nearest_price,
+        tolerance_pct=analysis_settings.reversal_test_tolerance_pct,
+        lookback_bars=analysis_settings.reversal_lookback_bars,
     )
+    reversal_ok = daily_reversal or not analysis_settings.require_daily_close_reversal
+    confirmations_ok = confirmations >= min_confirmations
+    net_crv = position_suggestion.net_crv if position_suggestion is not None else None
+    net_crv_ok = net_crv is not None and net_crv >= risk_settings.min_net_crv
+
+    # Rule checks are stored as-is so the report and dashboard can show why a hit did not alert.
+    rule_checks: dict[str, Optional[bool | float]] = {
+        "level_hit": is_hit,
+        "daily_close_reversal": daily_reversal,
+        "reversal_required": analysis_settings.require_daily_close_reversal,
+        "confirmations_ok": confirmations_ok,
+        "net_crv": net_crv,
+        "net_crv_ok": net_crv_ok,
+    }
+
+    is_actionable = bool(is_hit and reversal_ok and confirmations_ok and net_crv_ok)
     is_a_setup = bool(
         is_actionable and position_suggestion.net_crv >= risk_settings.a_setup_net_crv
     )
@@ -211,4 +258,7 @@ def analyze_ticker(
         is_actionable=is_actionable,
         is_a_setup=is_a_setup,
         index_ratio=index_ratio,
+        profile_basis=profile_basis,
+        daily_close_reversal=daily_reversal,
+        rule_checks=rule_checks,
     )

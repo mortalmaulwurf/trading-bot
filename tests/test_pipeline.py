@@ -35,7 +35,7 @@ class PipelineTest(unittest.TestCase):
         self.settings = load_settings()
         self.analysis: AnalysisSettings = self.settings.analysis
         # Relax thresholds so the synthetic series produces a hit with a computable plan.
-        self.analysis = replace(self.analysis, proximity_threshold_pct=10.0)
+        self.analysis = replace(self.analysis, proximity_threshold_pct=10.0, require_daily_close_reversal=False)
         self.risk = replace(self.settings.risk, min_net_crv=0.1, a_setup_net_crv=1.0)
 
     def _analyze(self, **kwargs):

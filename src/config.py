@@ -51,6 +51,13 @@ class AnalysisSettings:
     confluence_threshold_pct: float
     weekly_trend_sma_periods: int
     upcoming_events_days_ahead: int
+    # Optional anchor date (YYYY-MM-DD) for a fixed-range volume profile.
+    profile_anchor_date: Optional[str] = None
+    # Rule set: confirmed reversal = zone tested within the last N daily bars and the
+    # latest daily close is back above the level.
+    require_daily_close_reversal: bool = True
+    reversal_test_tolerance_pct: float = 0.5
+    reversal_lookback_bars: int = 3
 
 
 @dataclass(frozen=True)
@@ -80,9 +87,13 @@ def load_settings(path: Optional[Path] = None) -> Settings:
     with open(path, "r", encoding="utf-8") as f:
         raw = yaml.safe_load(f)
 
+    analysis_raw = dict(raw["analysis"])
+    if analysis_raw.get("profile_anchor_date") is not None:
+        analysis_raw["profile_anchor_date"] = str(analysis_raw["profile_anchor_date"])
+
     return Settings(
         risk=RiskSettings(**raw["risk"]),
-        analysis=AnalysisSettings(**raw["analysis"]),
+        analysis=AnalysisSettings(**analysis_raw),
         notifications=NotificationSettings(**raw.get("notifications", {})),
     )
 

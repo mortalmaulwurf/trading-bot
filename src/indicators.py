@@ -62,3 +62,20 @@ def atr(df: pd.DataFrame, period: int = 14) -> Optional[float]:
     ).max(axis=1)
     value = true_range.ewm(alpha=1 / period, min_periods=period, adjust=False).mean().iloc[-1]
     return None if pd.isna(value) else float(value)
+
+
+def daily_close_reversal(
+    df: pd.DataFrame, level: float, tolerance_pct: float = 0.5, lookback_bars: int = 3
+) -> bool:
+    """Confirmed reversal on the daily close.
+
+    True if the zone around ``level`` was tested within the last ``lookback_bars`` daily
+    bars (lowest low at or below ``level`` plus tolerance) and the latest daily close
+    is back above the level.
+    """
+    if df.empty or level <= 0 or lookback_bars < 1:
+        return False
+    recent_low = float(df["Low"].iloc[-lookback_bars:].min())
+    tested = recent_low <= level * (1 + tolerance_pct / 100)
+    closed_above = float(df["Close"].iloc[-1]) > level
+    return bool(tested and closed_above)

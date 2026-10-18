@@ -19,8 +19,10 @@ risk:
   # true: the max risk budget includes fees and spread (strict); false: costs on top.
   risk_includes_costs: true
   # Net risk/reward (after fees and spread) needed to raise an alert / to be labelled "A-Setup".
-  min_net_crv: 2.0
-  a_setup_net_crv: 3.0
+  # Current rule set (Oct 2026): net CRV of at least 3:1. The A-Setup tier is raised to 4:1 so that
+  # it stays a distinct label (proposal, adjust freely).
+  min_net_crv: 3.0
+  a_setup_net_crv: 4.0
   # Stop reference: hit level minus this multiple of the daily ATR.
   atr_period: 14
   stop_atr_multiple: 1.0
@@ -54,11 +56,22 @@ analysis:
   weekly_trend_sma_periods: 10
   # Vorlauf (in Tagen), in dem nach bevorstehenden Quartalszahlen/Makro-Terminen gesucht wird
   upcoming_events_days_ahead: 7
+  # Optionales Startdatum (YYYY-MM-DD) fuer das Volumenprofil, analog zum Fixed Range Volume
+  # Profile in TradingView. Gesetzt: Level (POC/VAL/VAH) kommen aus den Kerzen ab diesem Tag
+  # (mind. 10 Kerzen, sonst Fallback auf lookback_days_daily). null = nur lookback_days_daily.
+  profile_anchor_date: null
+  # Bestaetigte Umkehr laut Regelwerk: Zone um das Level wurde in den letzten N Tageskerzen
+  # getestet (Tief <= Level + Toleranz) UND der letzte Tagesschluss liegt ueber dem Level.
+  require_daily_close_reversal: true
+  reversal_test_tolerance_pct: 0.5
+  reversal_lookback_bars: 3
 
 notifications:
-  # Telegram only fires for hits with at least this many confirmations (of 3)
-  # AND a net risk/reward >= risk.min_net_crv. Everything else stays in the report.
-  min_confirmations: 2
+  # Telegram only fires for hits that pass all rule checks: daily-close reversal (if required),
+  # at least this many of the 3 extra signals (RSI, volume spike, intraday momentum) AND a net
+  # risk/reward >= risk.min_net_crv. Everything else stays in the report.
+  # 0 because the daily-close reversal replaces the former "2 of 3" confirmation (adjust freely).
+  min_confirmations: 0
   # Optionale URL der gehosteten HTML-Übersichtsseite (z.B. Render Static
   # Site, siehe README "Online-Übersicht"). Wird an Telegram-Nachrichten
   # angehängt, falls gesetzt. Leer lassen, wenn (noch) nicht gehostet.
