@@ -32,6 +32,8 @@ def format_alerts_message(report: dict, site_url: str = "") -> str:
     for h in report["alerts"]:
         tag = "A-Setup" if h.get("is_a_setup") else "Setup"
         extra = []
+        if h.get("daily_close_reversal"):
+            extra.append("✅ Umkehr: Tagesschluss über Level")
         if h.get("confluence"):
             extra.append(f"✅ Konfluenz mit {h['confluence_level_name']}")
         if h.get("weekly_trend"):

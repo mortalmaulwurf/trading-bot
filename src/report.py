@@ -5,9 +5,14 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .config import RiskSettings
+from typing import Optional
+
+from .config import AnalysisSettings, RiskSettings
 from .html_report import render_html
 from .signal_engine import TickerAnalysis
+
+# Version of the JSON contract consumed by dashboards. Bump on breaking changes.
+REPORT_SCHEMA_VERSION = 2
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
 SITE_DIR = Path(__file__).resolve().parent.parent / "site"
@@ -19,6 +24,7 @@ def _analysis_to_dict(a: TickerAnalysis) -> dict:
         "name": a.display_name,
         "current_price": round(a.current_price, 4),
         "currency": a.currency,
+        "profile_basis": a.profile_basis,
         "poc": round(a.profile.poc, 4),
         "val": round(a.profile.val, 4),
         "vah": round(a.profile.vah, 4),
@@ -31,6 +37,8 @@ def _analysis_to_dict(a: TickerAnalysis) -> dict:
         "volume_spike": a.volume_spike,
         "intraday_momentum_up": a.intraday_momentum_up,
         "confirmations": a.confirmations,
+        "daily_close_reversal": a.daily_close_reversal,
+        "rule_checks": a.rule_checks,
         "confidence": a.confidence,
         "confluence": a.confluence,
         "confluence_level_name": a.confluence_level_name,
@@ -82,6 +90,7 @@ def build_report(
     errors: dict[str, str],
     threshold_pct: float,
     risk_settings: RiskSettings,
+    analysis_settings: Optional[AnalysisSettings] = None,
 ) -> dict:
     now = datetime.now(timezone.utc)
     hits = [r for r in results if r.is_hit]
@@ -89,7 +98,25 @@ def build_report(
         (r for r in results if r.is_actionable),
         key=lambda r: (not r.is_a_setup, -(r.position_suggestion.net_crv or 0)),
     )
+    if errors and results:
+        status = "partial"
+    elif errors:
+        status = "failed"
+    else:
+        status = "ok"
     return {
+        "schema_version": REPORT_SCHEMA_VERSION,
+        "status": status,
+        "rule_set": {
+            "min_net_crv": risk_settings.min_net_crv,
+            "a_setup_net_crv": risk_settings.a_setup_net_crv,
+            "max_risk_per_trade_eur": risk_settings.max_risk_per_trade_eur,
+            "max_position_eur": risk_settings.max_position_eur,
+            "require_daily_close_reversal": (
+                analysis_settings.require_daily_close_reversal if analysis_settings else None
+            ),
+            "profile_anchor_date": analysis_settings.profile_anchor_date if analysis_settings else None,
+        },
         "min_net_crv": risk_settings.min_net_crv,
         "a_setup_net_crv": risk_settings.a_setup_net_crv,
         "alerts_count": len(alerts),
@@ -167,7 +194,8 @@ def _format_markdown(report: dict) -> str:
                 f"Level: {h['nearest_level_name']} @ {h['nearest_level_price']} "
                 f"(Abstand {h['distance_pct']:+.2f}%)"
             )
-            lines.append(f"- Volumenprofil: POC {h['poc']} · VAL {h['val']} · VAH {h['vah']}")
+            basis = f" ({h['profile_basis']})" if h.get("profile_basis") else ""
+            lines.append(f"- Volumenprofil{basis}: POC {h['poc']} · VAL {h['val']} · VAH {h['vah']}")
             if "long_poc" in h:
                 lines.append(
                     f"- Langfristiges Volumenprofil (Kontext): POC {h['long_poc']} · "
@@ -184,6 +212,14 @@ def _format_markdown(report: dict) -> str:
                 f"RSI {h['rsi']}{' (überverkauft)' if h['rsi_oversold'] else ''} · "
                 f"Volumen-Spike {'ja' if h['volume_spike'] else 'nein'} · "
                 f"Intraday-Momentum {'dreht hoch' if h['intraday_momentum_up'] else 'neutral'}"
+            )
+            checks = h.get("rule_checks") or {}
+            reversal_mark = "✅" if checks.get("daily_close_reversal") else "❌"
+            reversal_note = "" if checks.get("reversal_required", True) else " (nicht erforderlich)"
+            crv_mark = "✅" if checks.get("net_crv_ok") else "❌"
+            lines.append(
+                f"- Regel-Check: Umkehr (Tagesschluss über Level) {reversal_mark}{reversal_note} · "
+                f"Netto-CRV ≥ {report['min_net_crv']}:1 {crv_mark}"
             )
             lines.extend(format_plan_lines_md(h, report))
             lines.append("")

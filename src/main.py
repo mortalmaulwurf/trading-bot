@@ -41,7 +41,7 @@ def run() -> int:
             errors[entry.symbol] = str(exc)
 
     report = report_module.build_report(
-        results, errors, settings.analysis.proximity_threshold_pct, settings.risk
+        results, errors, settings.analysis.proximity_threshold_pct, settings.risk, settings.analysis
     )
     md_path, json_path = report_module.write_reports(report)
     logger.info("Report geschrieben: %s / %s", md_path, json_path)
