@@ -65,17 +65,23 @@ def atr(df: pd.DataFrame, period: int = 14) -> Optional[float]:
 
 
 def daily_close_reversal(
-    df: pd.DataFrame, level: float, tolerance_pct: float = 0.5, lookback_bars: int = 3
+    df: pd.DataFrame,
+    level: float,
+    tolerance_pct: float = 0.5,
+    lookback_bars: int = 3,
+    require_bullish_candle: bool = False,
 ) -> bool:
     """Confirmed reversal on the daily close.
 
     True if the zone around ``level`` was tested within the last ``lookback_bars`` daily
     bars (lowest low at or below ``level`` plus tolerance) and the latest daily close
-    is back above the level.
+    is back above the level. With ``require_bullish_candle`` the latest daily candle must also
+    close above its open, so a gap-down sell-off that merely stops at the level does not count.
     """
     if df.empty or level <= 0 or lookback_bars < 1:
         return False
     recent_low = float(df["Low"].iloc[-lookback_bars:].min())
     tested = recent_low <= level * (1 + tolerance_pct / 100)
     closed_above = float(df["Close"].iloc[-1]) > level
-    return bool(tested and closed_above)
+    bullish = float(df["Close"].iloc[-1]) > float(df["Open"].iloc[-1])
+    return bool(tested and closed_above and (bullish or not require_bullish_candle))

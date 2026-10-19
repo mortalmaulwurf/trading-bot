@@ -65,6 +65,9 @@ analysis:
   require_daily_close_reversal: true
   reversal_test_tolerance_pct: 0.5
   reversal_lookback_bars: 3
+  # Zusaetzlich muss die letzte Tageskerze gruen sein (Schluss ueber Eroeffnung). Verhindert, dass
+  # ein Abverkaufstag mit Gap nach unten, der nur am Level stoppt, als Umkehr zaehlt.
+  reversal_require_bullish_candle: true
 
 notifications:
   # Telegram only fires for hits that pass all rule checks: daily-close reversal (if required),

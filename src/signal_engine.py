@@ -202,7 +202,9 @@ def analyze_ticker(
         nearest_price,
         tolerance_pct=analysis_settings.reversal_test_tolerance_pct,
         lookback_bars=analysis_settings.reversal_lookback_bars,
+        require_bullish_candle=analysis_settings.reversal_require_bullish_candle,
     )
+    candle_bullish = bool(float(daily["Close"].iloc[-1]) > float(daily["Open"].iloc[-1]))
     reversal_ok = daily_reversal or not analysis_settings.require_daily_close_reversal
     confirmations_ok = confirmations >= min_confirmations
     net_crv = position_suggestion.net_crv if position_suggestion is not None else None
@@ -212,6 +214,7 @@ def analyze_ticker(
     rule_checks: dict[str, Optional[bool | float]] = {
         "level_hit": is_hit,
         "daily_close_reversal": daily_reversal,
+        "daily_candle_bullish": candle_bullish,
         "reversal_required": analysis_settings.require_daily_close_reversal,
         "confirmations_ok": confirmations_ok,
         "net_crv": net_crv,

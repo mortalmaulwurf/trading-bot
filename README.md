@@ -51,7 +51,8 @@ Diskussion.
    - **Bestätigte Umkehr auf Tagesbasis** (`analysis.require_daily_close_reversal`):
      die Zone um das Level wurde in den letzten `reversal_lookback_bars`
      Tageskerzen getestet (Tief ≤ Level + `reversal_test_tolerance_pct`) und
-     der letzte Tagesschluss liegt über dem Level.
+     der letzte Tagesschluss liegt über dem Level und die Tageskerze ist grün
+     (`reversal_require_bullish_candle`, Schluss über Eröffnung).
    - **Netto-CRV** mindestens `risk.min_net_crv` (Standard 3:1; ab
      `risk.a_setup_net_crv`, Standard 4:1, als "A-Setup" markiert).
    - Optional mindestens `notifications.min_confirmations` der Zusatzsignale
