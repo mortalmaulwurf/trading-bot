@@ -43,7 +43,8 @@ def run() -> int:
     report = report_module.build_report(
         results, errors, settings.analysis.proximity_threshold_pct, settings.risk, settings.analysis
     )
-    md_path, json_path = report_module.write_reports(report)
+    charts = report_module.build_charts(results, report["generated_at_utc"])
+    md_path, json_path = report_module.write_reports(report, charts)
     logger.info("Report geschrieben: %s / %s", md_path, json_path)
 
     token, chat_id = get_telegram_credentials()

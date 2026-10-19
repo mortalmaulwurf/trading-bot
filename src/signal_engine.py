@@ -48,8 +48,27 @@ class TickerAnalysis:
     is_a_setup: bool = False
     index_ratio: Optional[float] = None
     profile_basis: str = ""
+    candles: list[dict[str, float | str]] = field(default_factory=list)
     daily_close_reversal: bool = False
     rule_checks: dict[str, Optional[bool | float]] = field(default_factory=dict)
+
+
+CHART_CANDLES = 90
+
+
+def _chart_candles(daily: pd.DataFrame, bars: int = CHART_CANDLES) -> list[dict[str, float | str]]:
+    """Last ``bars`` daily candles as plain rows for the chart file."""
+    tail = daily.tail(bars)
+    return [
+        {
+            "t": ts.date().isoformat(),
+            "o": round(float(row["Open"]), 4),
+            "h": round(float(row["High"]), 4),
+            "l": round(float(row["Low"]), 4),
+            "c": round(float(row["Close"]), 4),
+        }
+        for ts, row in tail.iterrows()
+    ]
 
 
 def _confidence_label(confirmations: int) -> str:
@@ -259,6 +278,7 @@ def analyze_ticker(
         is_a_setup=is_a_setup,
         index_ratio=index_ratio,
         profile_basis=profile_basis,
+        candles=_chart_candles(daily),
         daily_close_reversal=daily_reversal,
         rule_checks=rule_checks,
     )
