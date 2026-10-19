@@ -92,6 +92,9 @@ src/
   signal_engine.py       Kombiniert alles zu einer Ticker-Analyse
   report.py               Markdown-/JSON-/HTML-Report-Erzeugung
   html_report.py            HTML-Übersichtsseite (für Render o.ä.)
+  rule_lights.py            Regel-Ampel und Papier-Trade-Kandidaten (wie im Dashboard)
+  svg_chart.py              Kerzenchart als Inline-SVG
+  formatting.py             Deutsche Zahlenformate
   notifier.py                 Telegram-Versand
   main.py                       Orchestrierung / Einstiegspunkt
 reports/                       Generierte Reports (werden vom Workflow committed)
@@ -178,10 +181,15 @@ bei längerer Pause ggf. im Tab **Actions** manuell wieder aktivieren.
 
 ## Online-Übersicht (Render Static Site)
 
-Jeder Lauf erzeugt zusätzlich `site/index.html` – eine einfache,
-eigenständige HTML-Seite mit derselben Zusammenfassung wie `reports/latest.md`
-(Klarnamen, Treffer, Volumenprofil, Wochentrend, Termine), aber besser lesbar
-auf dem Handy. Damit sie dauerhaft unter einer festen URL erreichbar ist
+Jeder Lauf erzeugt zusätzlich `site/index.html` – eine eigenständige HTML-Seite
+im App-Design (Karten, hell/dunkel) mit derselben Information wie das Dashboard:
+Status und Alter des Reports (mit Warnung ab 30 h, montags 80 h), pro Instrument
+Kurs, POC/VAL/VAH, Kerzenchart (letzte 90 Tage, aus `reports/charts.json`) mit
+Level-, Einstiegs-, Stop- und Ziel-Linien, Regel-Ampel (Level-Treffer, Umkehr,
+grüne Kerze, Netto-CRV), Planwerte und Termine. Setups sind hervorgehoben, Treffer,
+die nur an Umkehr oder Netto-CRV scheitern, als "Papier-Trade-Kandidat" markiert
+(nur Anzeige). Die Seite braucht kein externes CSS/JS; eine kurze Inline-Zeile
+berechnet nur das Alter. Damit sie dauerhaft unter einer festen URL erreichbar ist
 (z.B. um sie direkt in die Telegram-Nachricht zu packen):
 
 1. Auf [render.com](https://render.com) registrieren/einloggen (kostenlose
