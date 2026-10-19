@@ -295,6 +295,6 @@ def write_reports(report: dict, charts: Optional[dict] = None) -> tuple[Path, Pa
         (REPORTS_DIR / "charts.json").write_text(json.dumps(charts, separators=(",", ":")), encoding="utf-8")
 
     SITE_DIR.mkdir(parents=True, exist_ok=True)
-    (SITE_DIR / "index.html").write_text(render_html(report), encoding="utf-8")
+    (SITE_DIR / "index.html").write_text(render_html(report, charts), encoding="utf-8")
 
     return md_path, json_path
