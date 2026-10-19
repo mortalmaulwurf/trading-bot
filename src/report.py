@@ -14,6 +14,9 @@ from .signal_engine import TickerAnalysis
 # Version of the JSON contract consumed by dashboards. Bump on breaking changes.
 REPORT_SCHEMA_VERSION = 2
 
+# Version of reports/charts.json (candles per ticker for dashboard and HTML charts).
+CHARTS_SCHEMA_VERSION = 1
+
 REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
 SITE_DIR = Path(__file__).resolve().parent.parent / "site"
 
@@ -262,7 +265,16 @@ def _format_markdown(report: dict) -> str:
     return "\n".join(lines)
 
 
-def write_reports(report: dict) -> tuple[Path, Path]:
+def build_charts(results: list[TickerAnalysis], generated_at_utc: str) -> dict:
+    """Daily candles per ticker. Kept out of latest.json so the archived daily reports stay small."""
+    return {
+        "schema_version": CHARTS_SCHEMA_VERSION,
+        "generated_at_utc": generated_at_utc,
+        "charts": {r.ticker: {"currency": r.currency, "candles": r.candles} for r in results},
+    }
+
+
+def write_reports(report: dict, charts: Optional[dict] = None) -> tuple[Path, Path]:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -278,6 +290,9 @@ def write_reports(report: dict) -> tuple[Path, Path]:
         path.write_text(json_text, encoding="utf-8")
     for path in (md_path, latest_md):
         path.write_text(md_text, encoding="utf-8")
+
+    if charts is not None:
+        (REPORTS_DIR / "charts.json").write_text(json.dumps(charts, separators=(",", ":")), encoding="utf-8")
 
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     (SITE_DIR / "index.html").write_text(render_html(report), encoding="utf-8")

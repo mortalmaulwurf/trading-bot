@@ -20,6 +20,18 @@ einen stabilen Datenvertrag, unabhängig vom Dashboard.
 `confirmations_ok`, `net_crv`, `net_crv_ok`. Damit kann das Dashboard anzeigen,
 **warum** kein Alarm kam.
 
+## Chart-Daten: `reports/charts.json` (`schema_version: 1`)
+
+Tageskerzen der letzten 90 Handelstage je Ticker, getrennt von `latest.json`, damit die
+archivierten Tagesreports klein bleiben. Wird bei jedem Lauf überschrieben, nicht archiviert.
+
+```json
+{"schema_version": 1, "generated_at_utc": "...", "charts": {"EXS1.DE": {"currency": "EUR", "candles": [{"t": "2026-10-16", "o": 1, "h": 2, "l": 0.5, "c": 1.5}]}}}
+```
+
+Level (POC/VAL/VAH) und Plan (Einstieg, Stop, Ziel) stehen in `latest.json`; das Dashboard
+verbindet beide Dateien über den Ticker.
+
 ## Varianten
 
 | | Beschreibung | Vorteil | Nachteil |
