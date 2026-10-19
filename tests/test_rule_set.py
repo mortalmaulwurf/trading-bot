@@ -14,11 +14,11 @@ from src.signal_engine import _select_profile_frame, analyze_ticker
 from tests.test_pipeline import _intraday_turning_up, _synthetic_daily
 
 
-def _frame(lows: list[float], closes: list[float]) -> pd.DataFrame:
+def _frame(lows: list[float], closes: list[float], opens: list[float] | None = None) -> pd.DataFrame:
     idx = pd.date_range("2026-10-01", periods=len(closes), freq="B", tz="UTC")
     return pd.DataFrame(
         {
-            "Open": closes,
+            "Open": opens if opens is not None else closes,
             "High": [c + 1 for c in closes],
             "Low": lows,
             "Close": closes,
@@ -46,6 +46,16 @@ class DailyCloseReversalTest(unittest.TestCase):
         self.assertFalse(indicators.daily_close_reversal(df, level=100.0, lookback_bars=3))
         self.assertTrue(indicators.daily_close_reversal(df, level=100.0, lookback_bars=4))
 
+    def test_red_candle_is_rejected_when_bullish_required(self):
+        # tested the level and closed above it, but closed below its open (gap-down sell-off day)
+        df = _frame(lows=[105, 101, 99.8], closes=[106, 103, 101], opens=[105, 104, 108])
+        self.assertTrue(indicators.daily_close_reversal(df, level=100.0))
+        self.assertFalse(indicators.daily_close_reversal(df, level=100.0, require_bullish_candle=True))
+
+    def test_green_candle_passes_when_bullish_required(self):
+        df = _frame(lows=[105, 101, 99.8], closes=[106, 103, 101], opens=[105, 104, 100.2])
+        self.assertTrue(indicators.daily_close_reversal(df, level=100.0, require_bullish_candle=True))
+
     def test_empty_frame(self):
         self.assertFalse(indicators.daily_close_reversal(_frame([], []), level=100.0))
 
@@ -57,6 +67,7 @@ class SettingsTest(unittest.TestCase):
         self.assertGreater(s.risk.a_setup_net_crv, s.risk.min_net_crv)
         self.assertEqual(s.risk.max_risk_per_trade_eur, 10)
         self.assertTrue(s.analysis.require_daily_close_reversal)
+        self.assertTrue(s.analysis.reversal_require_bullish_candle)
         self.assertIsNone(s.analysis.profile_anchor_date)
 
     def test_unquoted_yaml_date_becomes_string(self):
@@ -117,6 +128,7 @@ class RuleGateTest(unittest.TestCase):
         a = self._analyze(reversal=True)
         self.assertTrue(a.is_actionable)
         self.assertTrue(a.daily_close_reversal)
+        self.assertIn("daily_candle_bullish", a.rule_checks)
 
     def test_reversal_not_required(self):
         self.analysis = replace(self.analysis, require_daily_close_reversal=False)

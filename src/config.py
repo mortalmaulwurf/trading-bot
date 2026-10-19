@@ -58,6 +58,7 @@ class AnalysisSettings:
     require_daily_close_reversal: bool = True
     reversal_test_tolerance_pct: float = 0.5
     reversal_lookback_bars: int = 3
+    reversal_require_bullish_candle: bool = True
 
 
 @dataclass(frozen=True)

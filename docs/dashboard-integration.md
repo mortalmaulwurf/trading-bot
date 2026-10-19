@@ -16,7 +16,7 @@ einen stabilen Datenvertrag, unabhängig vom Dashboard.
 | `all_results[]` | Je Instrument: Kurs, POC/VAL/VAH, `profile_basis`, `rule_checks`, ggf. `position_suggestion` |
 | `errors` | Fehlertexte je Ticker |
 
-`rule_checks` je Instrument: `level_hit`, `daily_close_reversal`, `reversal_required`,
+`rule_checks` je Instrument: `level_hit`, `daily_close_reversal`, `daily_candle_bullish`, `reversal_required`,
 `confirmations_ok`, `net_crv`, `net_crv_ok`. Damit kann das Dashboard anzeigen,
 **warum** kein Alarm kam.
 
