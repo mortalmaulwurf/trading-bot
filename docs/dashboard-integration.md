@@ -11,8 +11,9 @@ einen stabilen Datenvertrag, unabhängig vom Dashboard.
 | `schema_version` | Version des Vertrags, steigt nur bei Breaking Changes |
 | `status` | `ok`, `partial` (einzelne Ticker fehlgeschlagen) oder `failed` |
 | `generated_at_utc` | Zeitpunkt des Laufs, für eine Aktualitäts-Anzeige im Dashboard |
-| `rule_set` | Aktive Regeln (Netto-CRV, Risiko pro Trade, Umkehr-Pflicht, Profil-Startdatum) |
+| `rule_set` | Aktive Regeln (Netto-CRV, `paper_net_crv`, Risiko pro Trade, Umkehr-Pflicht, Profil-Startdatum) |
 | `alerts` / `alerts_count` | Setups, die alle Regel-Checks bestehen |
+| `paper_trades_count`, `all_results[].is_paper_trade` | Papier-Trades: alle Regeln erfüllt, Netto-CRV zwischen `paper_net_crv` und `min_net_crv` (nur Anzeige) |
 | `all_results[]` | Je Instrument: Kurs, POC/VAL/VAH, `profile_basis`, `rule_checks`, ggf. `position_suggestion` |
 | `errors` | Fehlertexte je Ticker |
 

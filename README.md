@@ -61,6 +61,13 @@ Diskussion.
    Alle übrigen Treffer stehen weiter im Report (inkl. `rule_checks`, welche
    Regel nicht erfüllt war), lösen aber keinen Push aus.
 
+   **Papier-Trades (Anzeige-Stufe):** Erfüllt ein Treffer alle Regeln, liegt
+   das Netto-CRV aber zwischen `risk.paper_net_crv` (Standard 2:1) und
+   `risk.min_net_crv`, gilt er als Papier-Trade für das Journal. Er erscheint
+   im Report (`is_paper_trade`, `paper_trades_count`), als Badge auf der
+   HTML-Seite und in der 8-Uhr-Statusmeldung, löst aber keinen Telegram-Alarm
+   aus. `paper_net_crv` gleich `min_net_crv` oder höher schaltet die Stufe ab.
+
    **Volumenprofil mit festem Startdatum:** `analysis.profile_anchor_date`
    (z.B. `2026-09-18`) berechnet POC/VAL/VAH nur aus den Kerzen ab diesem Tag,
    analog zum Fixed Range Volume Profile in TradingView. Ohne Datum gilt
