@@ -1,11 +1,9 @@
 name: Morning Status
 
 on:
-  schedule:
-    # GitHub cron runs in UTC only. 08:00 Berlin is 06:00 UTC in summer time and 07:00 UTC in winter time,
-    # so both are scheduled; src.status only sends when it is actually 08:xx in Europe/Berlin.
-    - cron: "0 6 * * 1-5"
-    - cron: "0 7 * * 1-5"
+  # No schedule: GitHub starts cron runs hours late (observed 4-8 h), so the 08:00 check in src.status
+  # skipped them. The NAS triggers this workflow at 08:00 Berlin time via the GitHub API
+  # (workflow_dispatch), see docs/nas-morning-trigger.md.
   workflow_dispatch: {}
 
 permissions:
