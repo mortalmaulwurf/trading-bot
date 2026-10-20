@@ -49,6 +49,20 @@ def _chart_levels(h: dict) -> list[dict]:
     return levels
 
 
+def _index_levels_html(idx: Optional[dict]) -> str:
+    """Index points for the knock-out certificate; the chart and plan above are in ETF prices."""
+    if not idx:
+        return ""
+    cells = [
+        ("Einstieg", idx.get("entry")),
+        ("Stop", idx.get("stop")),
+        ("Ziel", idx.get("target")),
+        ("Mindest-Ziel", idx.get("required_target")),
+    ]
+    grid = "".join(f"<div><dt>{label}</dt><dd>{de(value) if value is not None else '–'}</dd></div>" for label, value in cells)
+    return f'<h4 class="plan-index-title">Index (Punkte) für das Zertifikat</h4><dl class="plan-grid">{grid}</dl>'
+
+
 def _plan_html(h: dict) -> str:
     p = h.get("position_suggestion")
     if not p:
@@ -71,7 +85,7 @@ def _plan_html(h: dict) -> str:
     ]
     grid = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in cells)
     note = '<p class="plan-note">Einsatz durch die Positionsgrenze gedeckelt.</p>' if p.get("capped") else ""
-    return f'<div class="plan"><h4>{title}</h4><dl class="plan-grid">{grid}</dl>{note}</div>'
+    return f'<div class="plan"><h4>{title}</h4><dl class="plan-grid">{grid}</dl>{note}{_index_levels_html(p.get("index_levels"))}</div>'
 
 
 def _card(h: dict, rule_set: dict, alert_tickers: set[str], candles: Optional[list[dict]]) -> str:
@@ -171,6 +185,7 @@ h3, h4, p, ul, dl { margin:0; } ul { padding:0; list-style:none; }
 .plan h4, .events h4 { margin-bottom:8px; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; color:var(--ink2); }
 .plan-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 16px; }
 .plan-grid dt { font-size:.75rem; color:var(--ink3); } .plan-grid dd { margin:0; font-weight:600; font-variant-numeric:tabular-nums; }
+.plan-index-title { margin-top:14px; }
 .plan-note { margin-top:8px; font-size:.8rem; color:var(--warn); }
 .events ul { padding-left:18px; list-style:disc; font-size:.88rem; color:var(--warn); }
 footer { margin-top:28px; color:var(--ink3); font-size:.8rem; }
