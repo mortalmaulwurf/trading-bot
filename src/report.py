@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 from .config import AnalysisSettings, RiskSettings
+from .rule_lights import is_paper_candidate
 from .html_report import render_html
 from .signal_engine import TickerAnalysis
 
@@ -96,11 +97,19 @@ def build_report(
     analysis_settings: Optional[AnalysisSettings] = None,
 ) -> dict:
     now = datetime.now(timezone.utc)
+    paper_rule_set = {"min_net_crv": risk_settings.min_net_crv, "paper_net_crv": risk_settings.paper_net_crv}
+
+    def to_dict(r: TickerAnalysis) -> dict:
+        d = _analysis_to_dict(r)
+        d["is_paper_trade"] = is_paper_candidate(d, paper_rule_set)
+        return d
+
     hits = [r for r in results if r.is_hit]
     alerts = sorted(
         (r for r in results if r.is_actionable),
         key=lambda r: (not r.is_a_setup, -(r.position_suggestion.net_crv or 0)),
     )
+    all_results = [to_dict(r) for r in results]
     if errors and results:
         status = "partial"
     elif errors:
@@ -113,6 +122,7 @@ def build_report(
         "rule_set": {
             "min_net_crv": risk_settings.min_net_crv,
             "a_setup_net_crv": risk_settings.a_setup_net_crv,
+            "paper_net_crv": risk_settings.paper_net_crv,
             "max_risk_per_trade_eur": risk_settings.max_risk_per_trade_eur,
             "max_position_eur": risk_settings.max_position_eur,
             "require_daily_close_reversal": (
@@ -123,13 +133,14 @@ def build_report(
         "min_net_crv": risk_settings.min_net_crv,
         "a_setup_net_crv": risk_settings.a_setup_net_crv,
         "alerts_count": len(alerts),
-        "alerts": [_analysis_to_dict(r) for r in alerts],
+        "paper_trades_count": sum(1 for d in all_results if d["is_paper_trade"]),
+        "alerts": [to_dict(r) for r in alerts],
         "generated_at_utc": now.isoformat(),
         "proximity_threshold_pct": threshold_pct,
         "tickers_analyzed": len(results),
         "hits_count": len(hits),
-        "hits": [_analysis_to_dict(r) for r in sorted(hits, key=lambda r: abs(r.distance_pct))],
-        "all_results": [_analysis_to_dict(r) for r in results],
+        "hits": [to_dict(r) for r in sorted(hits, key=lambda r: abs(r.distance_pct))],
+        "all_results": all_results,
         "errors": errors,
     }
 

@@ -23,6 +23,10 @@ risk:
   # it stays a distinct label (proposal, adjust freely).
   min_net_crv: 3.0
   a_setup_net_crv: 4.0
+  # Anzeige-Stufe fuer das Journal: Setups mit bestaetigter Umkehr und einem Netto-CRV zwischen
+  # paper_net_crv und min_net_crv gelten als Papier-Trade (nur Report/HTML/Status, kein Telegram-Alarm).
+  # Gleich min_net_crv oder hoeher setzen = Stufe deaktiviert.
+  paper_net_crv: 2.0
   # Stop reference: hit level minus this multiple of the daily ATR.
   atr_period: 14
   stop_atr_multiple: 1.0
