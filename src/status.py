@@ -79,6 +79,9 @@ def format_morning_message(report: dict, now_utc: datetime, site_url: str = "") 
             continue
         p = h.get("position_suggestion") or {}
         crv = f", Netto-CRV {p['net_crv']}:1" if p.get("net_crv") is not None else ""
+        if h.get("is_paper_trade"):
+            lines.append(f"📝 Papier-Trade: {_md_safe(h['name'])}{crv} (bitte ins Journal eintragen, kein Alarm)")
+            continue
         lines.append(f"Treffer ohne Setup: {_md_safe(h['name'])} - {h['confirmations']}/3 Bestätigungen{crv}")
 
     lines.append("")

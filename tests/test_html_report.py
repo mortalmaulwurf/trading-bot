@@ -68,15 +68,34 @@ class RuleLightsTest(unittest.TestCase):
 
 
 class PaperCandidateTest(unittest.TestCase):
-    def test_flags_only_reversal_or_crv_failures(self):
-        self.assertTrue(is_paper_candidate(_result(daily_close_reversal=False), RULE_SET))
-        self.assertTrue(is_paper_candidate(_result(net_crv=1.0), RULE_SET))
+    PAPER = {"min_net_crv": 3.0, "paper_net_crv": 2.0}
 
-    def test_ignores_actionable_no_hit_and_other_failures(self):
-        self.assertFalse(is_paper_candidate({**_result(), "is_actionable": True}, RULE_SET))
-        self.assertFalse(is_paper_candidate(_result(level_hit=False, net_crv=None), RULE_SET))
-        self.assertFalse(is_paper_candidate(_result(confirmations_ok=False, net_crv=1.0), RULE_SET))
-        self.assertFalse(is_paper_candidate(_result(), RULE_SET))
+    def test_flags_crv_between_paper_and_real_minimum(self):
+        self.assertTrue(is_paper_candidate(_result(net_crv=2.4), self.PAPER))
+        self.assertTrue(is_paper_candidate(_result(net_crv=2.0), self.PAPER))
+        self.assertTrue(is_paper_candidate(_result(net_crv=2.95), self.PAPER))
+
+    def test_below_paper_minimum_is_not_a_paper_trade(self):
+        self.assertFalse(is_paper_candidate(_result(net_crv=1.9), self.PAPER))
+        self.assertFalse(is_paper_candidate(_result(net_crv=None), self.PAPER))
+
+    def test_unconfirmed_reversal_is_not_a_paper_trade_unless_not_required(self):
+        self.assertFalse(is_paper_candidate(_result(net_crv=2.5, daily_close_reversal=False), self.PAPER))
+        self.assertTrue(
+            is_paper_candidate(
+                _result(net_crv=2.5, daily_close_reversal=False, reversal_required=False), self.PAPER
+            )
+        )
+
+    def test_ignores_actionable_no_hit_and_missing_confirmations(self):
+        self.assertFalse(is_paper_candidate({**_result(net_crv=2.5), "is_actionable": True}, self.PAPER))
+        self.assertFalse(is_paper_candidate(_result(level_hit=False, net_crv=2.5), self.PAPER))
+        self.assertFalse(is_paper_candidate(_result(confirmations_ok=False, net_crv=2.5), self.PAPER))
+
+    def test_full_setup_and_old_reports_have_no_paper_tier(self):
+        self.assertFalse(is_paper_candidate(_result(net_crv=3.4), self.PAPER))
+        self.assertFalse(is_paper_candidate(_result(net_crv=2.5), RULE_SET))
+
 
 
 class SvgChartTest(unittest.TestCase):

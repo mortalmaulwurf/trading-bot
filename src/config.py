@@ -32,6 +32,8 @@ class RiskSettings:
     a_setup_net_crv: float
     atr_period: int
     stop_atr_multiple: float
+    # Display-only tier: setups between this and min_net_crv count as paper trades (no push).
+    paper_net_crv: float = 2.0
 
 
 @dataclass(frozen=True)

@@ -82,7 +82,9 @@ def _card(h: dict, rule_set: dict, alert_tickers: set[str], candles: Optional[li
     if is_alert:
         badges += f'<span class="badge badge--accent">{"A-Setup" if h.get("is_a_setup") else "Setup"}</span>'
     if paper:
-        badges += '<span class="badge badge--paper">Papier-Trade-Kandidat</span>'
+        paper_min = rule_set.get("paper_net_crv")
+        paper_label = f"Papier-Trade ≥ {de(paper_min)}:1" if paper_min is not None else "Papier-Trade"
+        badges += f'<span class="badge badge--paper">{paper_label}</span>'
     sign = "+" if h["distance_pct"] >= 0 else "−"
     chart = render_chart(h["name"], candles, _chart_levels(h)) if candles else ""
     lights = "".join(_light_html(light) for light in rule_lights(h, rule_set))

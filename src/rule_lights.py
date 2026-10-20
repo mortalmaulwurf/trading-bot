@@ -62,9 +62,15 @@ def rule_lights(result: dict, rule_set: dict) -> list[Light]:
 
 
 def is_paper_candidate(result: dict, rule_set: dict) -> bool:
-    """Hit that fails only on reversal, candle or net CRV. Display hint only."""
+    """Paper trade for the journal: all rules pass except a net CRV between the paper and the real minimum.
+
+    Display hint only (no push). Reports without ``paper_net_crv`` have no paper tier.
+    """
     checks = result.get("rule_checks") or {}
     if result.get("is_actionable") or not checks.get("level_hit") or not checks.get("confirmations_ok"):
         return False
-    failed = {light.id for light in rule_lights(result, rule_set) if light.state == "fail"}
-    return bool(failed & {"reversal", "bullish_candle", "net_crv"})
+    reversal_ok = bool(checks.get("daily_close_reversal")) or not checks.get("reversal_required", True)
+    net_crv = checks.get("net_crv")
+    min_crv = rule_set["min_net_crv"]
+    paper_min = rule_set.get("paper_net_crv", min_crv)
+    return bool(reversal_ok and net_crv is not None and paper_min <= net_crv < min_crv)
