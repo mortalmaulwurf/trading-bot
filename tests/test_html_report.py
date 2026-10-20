@@ -135,6 +135,19 @@ class RenderHtmlTest(unittest.TestCase):
         self.assertNotIn("https://", html)
         self.assertNotIn("src=", html)
 
+    def test_index_levels_are_shown_in_points(self):
+        plan = self.report["all_results"][0]["position_suggestion"]
+        plan["index_levels"] = {"entry": 24310.5, "stop": 23500.0, "target": None, "required_target": 24900.25}
+        html = render_html(self.report, self.charts)
+        for expected in ("Index (Punkte)", "24.310,50", "23.500,00", "24.900,25"):
+            self.assertIn(expected, html)
+        self.assertIn("<dd>–</dd>", html)  # target missing
+
+    def test_no_index_block_without_index_levels(self):
+        plan = self.report["all_results"][0]["position_suggestion"]
+        plan.pop("index_levels", None)
+        self.assertNotIn("Index (Punkte)", render_html(self.report, self.charts))
+
     def test_old_report_without_rule_set_still_renders(self):
         old = {k: v for k, v in self.report.items() if k not in ("rule_set", "status")}
         self.assertIn("Netto-CRV", render_html(old, self.charts))
