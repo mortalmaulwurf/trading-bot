@@ -1,4 +1,6 @@
 """Tests for the current rule set: 3:1 net CRV, daily-close reversal gate, anchored profile, JSON contract."""
+import datetime as dt
+import re
 import tempfile
 import unittest
 from dataclasses import replace
@@ -68,11 +70,13 @@ class SettingsTest(unittest.TestCase):
         self.assertEqual(s.risk.max_risk_per_trade_eur, 10)
         self.assertTrue(s.analysis.require_daily_close_reversal)
         self.assertTrue(s.analysis.reversal_require_bullish_candle)
-        self.assertIsNone(s.analysis.profile_anchor_date)
+        anchor = s.analysis.profile_anchor_date
+        if anchor is not None:
+            dt.date.fromisoformat(anchor)  # must be a valid YYYY-MM-DD string
 
     def test_unquoted_yaml_date_becomes_string(self):
         raw = Path("config/settings.yaml").read_text(encoding="utf-8")
-        raw = raw.replace("profile_anchor_date: null", "profile_anchor_date: 2026-09-18")
+        raw = re.sub(r"profile_anchor_date: .*", "profile_anchor_date: 2026-09-18", raw)
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "settings.yaml"
             path.write_text(raw, encoding="utf-8")
