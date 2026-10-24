@@ -1,55 +1,55 @@
-# Swing-Trading Scan – 2026-10-23T00:29:52.161246+00:00
+# Swing-Trading Scan – 2026-10-24T00:25:25.255456+00:00
 
 Analysiert: 4 Ticker · Treffer: 3 (Schwelle: ±1.5% um POC/VAL)
 
 ## Treffer
 
-### S&P 500 (SPY) – moderat
-- Kurs: 773.09 USD · Level: POC @ 768.6125 (Abstand +0.58%)
-- Volumenprofil (ab 2026-09-17): POC 768.6125 · VAL 762.7 · VAH 775.3133
-- Langfristiges Volumenprofil (Kontext): POC 682.599 · VAL 634.358 · VAH 740.996
-- Wochentrend: aufwärts (✅ im Einklang mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 53.5 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 773.09 · Stop 761.5942 (1.49% Abstand, Level minus ATR) · Ziel kein Level oberhalb
-- Hebel 10× (max. 44× nach KO-Puffer, KO-Abstand mind. 2.23%) · Einsatz 52.05€ · Kosten 2.26€ · Verlust am Stop 10.00€
-- CRV: nicht berechenbar (kein Ziel-Level oberhalb des Kurses)
-- Mindest-Ziel für 3.0:1 netto: 821.006 (+6.20%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 7757.17 · Stop 7641.82 · Ziel None · Mindest-Ziel 8237.96
-
 ### DAX (EXS1.DE) – moderat
-- Kurs: 211.55 EUR · Level: POC @ 209.1917 (Abstand +1.13%)
-- Volumenprofil (ab 2026-09-17): POC 209.1917 · VAL 206.5633 · VAH 210.99
+- Kurs: 209.15 EUR · Level: POC @ 209.1917 (Abstand -0.02%)
+- Volumenprofil (ab 2026-09-17): POC 209.1917 · VAL 206.5633 · VAH 210.7133
 - Langfristiges Volumenprofil (Kontext): POC 205.9575 · VAL 196.32 · VAH 210.455 — ✅ Konfluenz mit langfristiges POC
-- Wochentrend: aufwärts (✅ im Einklang mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 55.6 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 211.55 · Stop 206.6696 (2.31% Abstand, Level minus ATR) · Ziel kein Level oberhalb
-- Hebel 10× (max. 28× nach KO-Puffer, KO-Abstand mind. 3.46%) · Einsatz 33.94€ · Kosten 2.17€ · Verlust am Stop 10.00€
-- CRV: nicht berechenbar (kein Ziel-Level oberhalb des Kurses)
-- Mindest-Ziel für 3.0:1 netto: 231.6004 (+9.48%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 25645.04 · Stop 25053.42 · Ziel None · Mindest-Ziel 28075.64
+- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
+- Bestätigungen (1/3): RSI 49.4 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
+- Plan (Long): Einstieg 209.15 · Stop 206.6491 (1.20% Abstand, Level minus ATR) · Ziel 210.455 (langfristiges VAH)
+- Hebel 10× (max. 55× nach KO-Puffer, KO-Abstand mind. 1.79%) · Einsatz 64.22€ · Kosten 2.32€ · Verlust am Stop 10.00€
+- CRV brutto 0.52:1 · netto 0.17:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 219.6766 (+5.03%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 25371.75 · Stop 25068.37 · Ziel 25530.06 · Mindest-Ziel 26648.72
 
 ### Gold (GC=F) – schwach (nur Level-Nähe)
-- Kurs: 4036.8999 USD · Level: VAL @ 4088.8866 (Abstand -1.27%)
-- Volumenprofil (ab 2026-09-17): POC 4190.1115 · VAL 4088.8866 · VAH 4291.3365
-- Langfristiges Volumenprofil (Kontext): POC 4097.8717 · VAL 3957.4634 · VAH 4687.5868 — ✅ Konfluenz mit langfristiges POC
+- Kurs: 4010.0 USD · Level: VAL @ 4004.2199 (Abstand +0.14%)
+- Volumenprofil (ab 2026-09-17): POC 4176.9499 · VAL 4004.2199 · VAH 4259.5599
+- Langfristiges Volumenprofil (Kontext): POC 4378.6884 · VAL 3957.4634 · VAH 4687.5868 — ✅ Konfluenz mit langfristiges VAL
 - Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (0/3): RSI 32.6 · Volumen-Spike nein · Intraday-Momentum neutral
+- Bestätigungen (0/3): RSI 30.8 · Volumen-Spike nein · Intraday-Momentum neutral
 - Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 4036.8999 · Stop 4009.9256 (0.67% Abstand, Level minus ATR) · Ziel 4097.8717 (langfristiges POC)
-- Hebel 10× (max. 99× nach KO-Puffer, KO-Abstand mind. 1.00%) · Einsatz 111.39€ · Kosten 2.56€ · Verlust am Stop 10.00€
-- CRV brutto 2.26:1 · netto 1.43:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 4154.8892 (+2.92%)
+- Plan (Long): Einstieg 4010.0 · Stop 3924.991 (2.12% Abstand, Level minus ATR) · Ziel 4176.9499 (POC)
+- Hebel 10× (max. 31× nach KO-Puffer, KO-Abstand mind. 3.18%) · Einsatz 36.87€ · Kosten 2.18€ · Verlust am Stop 10.00€
+- CRV brutto 1.96:1 · netto 1.32:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 4360.0611 (+8.73%)
+
+### S&P 500 (SPY) – moderat
+- Kurs: 763.96 USD · Level: VAL @ 761.9116 (Abstand +0.27%)
+- Volumenprofil (ab 2026-09-17): POC 767.0358 · VAL 761.9116 · VAH 774.525
+- Langfristiges Volumenprofil (Kontext): POC 682.599 · VAL 634.358 · VAH 740.996
+- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
+- Bestätigungen (1/3): RSI 45.2 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
+- Plan (Long): Einstieg 763.96 · Stop 754.5433 (1.23% Abstand, Level minus ATR) · Ziel 767.0358 (POC)
+- Hebel 10× (max. 54× nach KO-Puffer, KO-Abstand mind. 1.85%) · Einsatz 62.37€ · Kosten 2.31€ · Verlust am Stop 10.00€
+- CRV brutto 0.33:1 · netto 0.02:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 803.537 (+5.18%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 7663.43 · Stop 7568.97 · Ziel 7694.28 · Mindest-Ziel 8060.43
 
 ## Alle beobachteten Instrumente
 
 | Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |
 |---|---|---|---|---|---|---|
-| S&P 500 (SPY) | 773.09 USD | POC @ 768.6125 | +0.58% | 53.5 | aufwärts | ✅ |
-| DAX (EXS1.DE) | 211.55 EUR | POC @ 209.1917 | +1.13% | 55.6 | aufwärts | ✅ |
-| Gold (GC=F) | 4036.8999 USD | VAL @ 4088.8866 | -1.27% | 32.6 | abwärts | ✅ |
-| WTI-Rohöl (CL=F) | 99.24 USD | POC @ 91.9777 | +7.90% | 57.5 | aufwärts | – |
+| S&P 500 (SPY) | 763.96 USD | VAL @ 761.9116 | +0.27% | 45.2 | abwärts | ✅ |
+| DAX (EXS1.DE) | 209.15 EUR | POC @ 209.1917 | -0.02% | 49.4 | abwärts | ✅ |
+| Gold (GC=F) | 4010.0 USD | VAL @ 4004.2199 | +0.14% | 30.8 | abwärts | ✅ |
+| WTI-Rohöl (CL=F) | 103.44 USD | POC @ 91.9777 | +12.46% | 63.2 | aufwärts | – |
 
 ---
 _Nur zur Analyse-Unterstützung, keine automatisch ausgeführten Trades. Pläne und Positionsgrößen sind informative Vorschläge auf Basis der hinterlegten Risiko-Parameter (config/settings.yaml) und einer vereinfachten Stop-Referenz (Level minus ATR). Das Ziel ist das nächste strukturelle Level oberhalb des Kurses. Termine sind Näherungswerte (Earnings via yfinance-Schätzung, Makro-Termine manuell in config/macro_events.yaml gepflegt) – bitte vor einem Einstieg selbst gegenprüfen._
