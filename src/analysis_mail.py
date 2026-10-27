@@ -27,6 +27,17 @@ MONTHS = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August"
           "November", "Dezember"]
 FONT = "-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
 MAX_BARS = 20
+CSS = (
+    ".c{background:#fff;border:1px solid #e2e8f0;border-radius:12px}"
+    ".l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;font-weight:700;margin:0 0 8px}"
+    ".p{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600;white-space:nowrap}"
+    ".pg{background:#dcfce7;color:#15803d}.pb{background:#fee2e2;color:#b91c1c}.pw{background:#fef3c7;color:#b45309}"
+    ".pn{background:#dbeafe;color:#1d4ed8}.pm{background:#e2e8f0;color:#475569}"
+    ".t{font-size:14px;color:#0f172a;padding:8px 0;border-top:1px solid #e2e8f0}"
+    ".h{font-size:11px;color:#64748b}.n{font-size:13px;line-height:20px;color:#0f172a}"
+    ".k{background:#f1f5f9;border-radius:6px}.m{width:12px;height:12px;border-radius:6px}"
+    ".b{border-radius:3px}.g{background:#e2e8f0;border-radius:4px}"
+)
 
 
 def _esc(value: Any) -> str:
@@ -55,10 +66,11 @@ def _tone_of(pct: Any) -> str:
     return "good" if number > 0 else "bad"
 
 
+PILL_CLASS = {"good": "pg", "bad": "pb", "warn": "pw", "neutral": "pn", "muted": "pm"}
+
+
 def _pill(text: Any, tone: str = "muted") -> str:
-    color, bg = TONES.get(tone, TONES["muted"])
-    return (f'<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:{bg};color:{color};'
-            f'font-size:12px;font-weight:600;white-space:nowrap">{_esc(text)}</span>')
+    return f'<span class="p {PILL_CLASS.get(tone, "pm")}">{_esc(text)}</span>'
 
 
 def _de_date(iso: Any) -> str:
@@ -70,14 +82,12 @@ def _de_date(iso: Any) -> str:
 
 
 def _label(text: str) -> str:
-    return (f'<div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:{MUTED};'
-            f'font-weight:700;margin:0 0 8px">{text}</div>')
+    return f'<div class="l">{text}</div>'
 
 
 def _card(inner: str, title: str = "") -> str:
     head = _label(_esc(title)) if title else ""
-    return (f'<tr><td style="padding:0 16px 14px"><table role="presentation" width="100%" cellpadding="0" '
-            f'cellspacing="0" border="0" style="background:{CARD};border:1px solid {LINE};border-radius:12px">'
+    return (f'<tr><td style="padding:0 16px 14px"><table width="100%" cellpadding="0" cellspacing="0" class="c">'
             f'<tr><td style="padding:16px">{head}{inner}</td></tr></table></td></tr>')
 
 
@@ -91,11 +101,10 @@ def _sparkline(closes: Iterable[Any], height: int = 46) -> str:
     for i, v in enumerate(values):
         h = 6 + round((v - low) / span * (height - 6))
         color = "#94a3b8" if i == 0 else ("#16a34a" if v >= values[i - 1] else "#dc2626")
-        cells.append(f'<td valign="bottom" height="{height}" style="height:{height}px;font-size:0;line-height:0">'
-                     f'<div style="height:{h}px;background:{color}">&nbsp;</div></td>')
-    return (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="1" border="0" '
-            f'style="table-layout:fixed"><tr>{"".join(cells)}</tr></table>'
-            f'<div style="font-size:11px;color:{MUTED};margin-top:4px">Schlusskurse, letzte {len(values)} Handelstage '
+        cells.append(f'<td valign="bottom"><div style="height:{h}px;background:{color}"></div></td>')
+    return (f'<table width="100%" height="{height}" cellpadding="0" cellspacing="1" style="table-layout:fixed">'
+            f'<tr>{"".join(cells)}</tr></table>'
+            f'<div class="h" style="margin-top:4px">Schlusskurse, letzte {len(values)} Handelstage '
             f'(grün: Anstieg zum Vortag, rot: Rückgang; Skala beginnt beim Tiefstwert)</div>')
 
 
@@ -109,10 +118,9 @@ def _perf_chart(items: list[dict]) -> str:
     for label, pct in rows:
         width = max(3, round(abs(pct) / peak * 100))
         color = "#16a34a" if pct >= 0 else "#dc2626"
-        align = "" if pct >= 0 else 'align="right"'
-        bar = (f'<table role="presentation" width="{width}%" cellpadding="0" cellspacing="0" border="0" {align}>'
-               f'<tr><td height="14" style="height:14px;background:{color};border-radius:3px;font-size:0;'
-               f'line-height:0">&nbsp;</td></tr></table>')
+        align = "" if pct >= 0 else ' align="right"'
+        bar = (f'<table width="{width}%" cellpadding="0" cellspacing="0"{align}><tr>'
+               f'<td height="14" class="b" style="background:{color}"></td></tr></table>')
         neg = bar if pct < 0 else ""
         pos = bar if pct >= 0 else ""
         out.append(
@@ -121,7 +129,7 @@ def _perf_chart(items: list[dict]) -> str:
             f'<td width="28%" style="padding:4px 0">{pos}</td>'
             f'<td width="14%" align="right" style="font-size:13px;font-weight:600;padding:4px 0 4px 8px;'
             f'color:{TONES[_tone_of(pct)][0]}">{_pct(pct, 1)}</td></tr>')
-    return f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(out)}</table>'
+    return f'<table width="100%" cellpadding="0" cellspacing="0">{"".join(out)}</table>'
 
 
 def _ladder(levels: dict, close: Optional[float]) -> str:
@@ -142,17 +150,15 @@ def _ladder(levels: dict, close: Optional[float]) -> str:
         dist = "" if is_close or close in (None, 0) else _pct((price / close - 1) * 100, 1)
         rows.append(
             f'<tr><td width="16%" style="font-size:13px;padding:5px 0;color:{INK};font-weight:{700 if is_close else 500}">'
-            f'{name}</td><td width="20%" align="right" style="font-size:13px;padding:5px 8px;color:{INK};'
-            f'font-variant-numeric:tabular-nums">{de(price, 2 if price < 1000 else 0)}</td>'
-            f'<td width="14%" align="right" style="font-size:12px;padding:5px 8px 5px 0;color:{MUTED}">{dist}</td>'
-            f'<td width="50%" style="padding:5px 0"><table role="presentation" width="100%" cellpadding="0" '
-            f'cellspacing="0" border="0" style="background:{BG};border-radius:6px"><tr>'
-            f'<td width="{pos}%" height="12" style="height:12px;font-size:0;line-height:0">&nbsp;</td>'
-            f'<td width="12" height="12" style="width:12px;height:12px;background:{color};border-radius:6px;'
-            f'font-size:0;line-height:0">&nbsp;</td><td style="font-size:0;line-height:0">&nbsp;</td></tr></table></td></tr>')
-    note = (f'<div style="font-size:11px;color:{MUTED};margin-top:2px">Value Area: VAL bis VAH (70 % des Volumens), '
-            f'POC: Preis mit dem meisten Volumen. Abstand zum Schluss in Prozent.</div>')
-    return f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(rows)}</table>{note}'
+            f'{name}</td><td width="20%" align="right" style="font-size:13px;padding:5px 8px;color:{INK}">'
+            f'{de(price, 2 if price < 1000 else 0)}</td>'
+            f'<td width="14%" align="right" class="h" style="padding:5px 8px 5px 0">{dist}</td>'
+            f'<td width="50%" style="padding:5px 0"><table width="100%" cellpadding="0" cellspacing="0" class="k"><tr>'
+            f'<td width="{pos}%" height="12"></td><td class="m" style="background:{color}"></td><td></td>'
+            f'</tr></table></td></tr>')
+    note = ('<div class="h" style="margin-top:2px">Value Area: VAL bis VAH (70 % des Volumens), '
+            'POC: Preis mit dem meisten Volumen. Abstand zum Schluss in Prozent.</div>')
+    return f'<table width="100%" cellpadding="0" cellspacing="0">{"".join(rows)}</table>{note}'
 
 
 def _rsi_gauge(rsi: Optional[float]) -> str:
@@ -162,13 +168,10 @@ def _rsi_gauge(rsi: Optional[float]) -> str:
     tone = "neutral" if rsi < 30 else ("bad" if rsi > 70 else "muted")
     color = {"neutral": "#2563eb", "bad": "#dc2626", "muted": "#64748b"}[tone]
     zone = "überverkauft" if rsi < 30 else ("überkauft" if rsi > 70 else "neutral")
-    return (f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>'
-            f'<td width="60" style="font-size:12px;color:{MUTED}">RSI {de(rsi, 1)}</td>'
-            f'<td><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" '
-            f'style="background:{LINE};border-radius:4px"><tr><td width="{width}%" height="8" style="height:8px;'
-            f'background:{color};border-radius:4px;font-size:0;line-height:0">&nbsp;</td><td style="font-size:0">'
-            f'&nbsp;</td></tr></table></td><td width="80" align="right" style="font-size:12px;color:{MUTED}">{zone}</td>'
-            f'</tr></table>')
+    return (f'<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60" class="h">RSI {de(rsi, 1)}</td>'
+            f'<td><table width="100%" cellpadding="0" cellspacing="0" class="g"><tr>'
+            f'<td width="{width}%" height="8" class="g" style="background:{color}"></td><td></td></tr></table></td>'
+            f'<td width="80" align="right" class="h">{zone}</td></tr></table>')
 
 
 def _trend_tone(rating: str) -> str:
@@ -207,17 +210,17 @@ def _snapshot(instruments: list[dict]) -> str:
         close = _finite(ins.get("close"))
         price = "–" if close is None else de(close, 2 if close < 1000 else 0)
         rows.append(
-            f'<tr><td style="padding:8px 0;border-top:1px solid {LINE};font-size:14px;font-weight:600;color:{INK}">'
-            f'{_esc(ins.get("name", ""))}<div style="font-size:11px;font-weight:400;color:{MUTED}">{_esc(ins.get("basis", ""))}'
-            f'</div></td><td align="right" style="padding:8px 0;border-top:1px solid {LINE};font-size:14px;color:{INK}">'
-            f'{price}</td><td align="right" style="padding:8px 0 8px 10px;border-top:1px solid {LINE}">'
+            f'<tr><td class="t" style="font-weight:600">{_esc(ins.get("name", ""))}'
+            f'<div class="h" style="font-weight:400">{_esc(ins.get("basis", ""))}</div></td>'
+            f'<td align="right" class="t">{price}</td>'
+            f'<td align="right" class="t" style="padding-left:10px">'
             f'{_pill(_pct(ins.get("day_pct")), _tone_of(ins.get("day_pct")))}</td>'
-            f'<td align="right" style="padding:8px 0 8px 10px;border-top:1px solid {LINE}">'
+            f'<td align="right" class="t" style="padding-left:10px">'
             f'{_pill(_pct(ins.get("week_pct")), _tone_of(ins.get("week_pct")))}</td></tr>')
-    head = (f'<tr><td style="font-size:11px;color:{MUTED}">Instrument</td><td align="right" style="font-size:11px;'
-            f'color:{MUTED}">Schluss</td><td align="right" style="font-size:11px;color:{MUTED};padding-left:10px">Tag</td>'
-            f'<td align="right" style="font-size:11px;color:{MUTED};padding-left:10px">Woche</td></tr>')
-    table = f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">{head}{"".join(rows)}</table>'
+    head = ('<tr><td class="h">Instrument</td><td align="right" class="h">Schluss</td>'
+            '<td align="right" class="h" style="padding-left:10px">Tag</td>'
+            '<td align="right" class="h" style="padding-left:10px">Woche</td></tr>')
+    table = f'<table width="100%" cellpadding="0" cellspacing="0">{head}{"".join(rows)}</table>'
     return _card(table, "Auf einen Blick")
 
 
@@ -252,11 +255,11 @@ def _instrument_card(ins: dict) -> str:
     adx = _finite(ins.get("adx"))
     gauge = _rsi_gauge(rsi)
     if gauge:
-        adx_text = "" if adx is None else (f'<div style="font-size:12px;color:{MUTED};margin-top:4px">ADX {de(adx, 0)}: '
+        adx_text = "" if adx is None else (f'<div class="h" style="margin-top:4px">ADX {de(adx, 0)}: '
                                            f'{"Trend vorhanden" if adx >= 25 else "kein klarer Trend"}</div>')
         parts.append(f'<div style="margin-bottom:8px">{gauge}{adx_text}</div>')
     if ins.get("note"):
-        parts.append(f'<div style="font-size:13px;line-height:20px;color:{INK};margin-top:6px">{_esc(ins["note"])}</div>')
+        parts.append(f'<div class="n" style="margin-top:6px">{_esc(ins["note"])}</div>')
     return _card("".join(parts))
 
 
@@ -266,13 +269,12 @@ def _market(items: list[dict]) -> str:
         tone = str(m.get("tone") or _tone_of(m.get("change_pct")))
         change = "" if m.get("change_pct") is None else _pill(_pct(m.get("change_pct")), _tone_of(m.get("change_pct")))
         rows.append(
-            f'<tr><td style="padding:8px 0;border-top:1px solid {LINE};font-size:14px;font-weight:600;color:{INK}">'
-            f'{_esc(m.get("label", ""))}</td><td align="right" style="padding:8px 0;border-top:1px solid {LINE};'
-            f'font-size:14px;color:{INK}">{_esc(m.get("value", ""))}</td><td align="right" style="padding:8px 0 8px 10px;'
-            f'border-top:1px solid {LINE}">{change}</td><td style="padding:8px 0 8px 12px;border-top:1px solid {LINE};'
-            f'font-size:12px;color:{TONES.get(tone, TONES["muted"])[0]}">{_esc(m.get("note", ""))}</td></tr>')
-    return _card(f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">{"".join(rows)}</table>',
-                 "Marktdaten")
+            f'<tr><td class="t" style="font-weight:600">{_esc(m.get("label", ""))}</td>'
+            f'<td align="right" class="t">{_esc(m.get("value", ""))}</td>'
+            f'<td align="right" class="t" style="padding-left:10px">{change}</td>'
+            f'<td class="t" style="padding-left:12px;font-size:12px;color:{TONES.get(tone, TONES["muted"])[0]}">'
+            f'{_esc(m.get("note", ""))}</td></tr>')
+    return _card(f'<table width="100%" cellpadding="0" cellspacing="0">{"".join(rows)}</table>', "Marktdaten")
 
 
 def _events(events: list[dict]) -> str:
@@ -346,7 +348,7 @@ def render_email(data: dict) -> str:
     body = "".join(sections) + footer
     return (f'<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" '
             f'content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Marktanalyse</title>'
-            f'</head><body style="margin:0;padding:0;background:{BG};font-family:{FONT}"><table role="presentation" width="100%" '
+            f'<style>{CSS}</style></head><body style="margin:0;padding:0;background:{BG};font-family:{FONT}"><table role="presentation" width="100%" '
             f'cellpadding="0" cellspacing="0" border="0" style="background:{BG}"><tr><td align="center">'
             f'<table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;'
             f'background:{BG}">{body}</table></td></tr></table></body></html>')
