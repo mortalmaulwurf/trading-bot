@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-25",
+  "mode": "weekly",
+  "generated_at": "Erstellt am 25.10.2026, Datenstand Freitagsschluss 23.10.",
+  "verdict": {
+    "label": "Kein Einstieg zum Wochenstart",
+    "tone": "warn",
+    "text": "Es gibt kein Setup nach deinen Regeln: Der DAX hat das VAL getestet, aber mit roter Kerze geschlossen. Mittwoch und Donnerstag sind Ereignistage (Fed, EZB, US-Inflation, Big-Tech-Zahlen), davor keine neuen Einstiege."
+  },
+  "instruments": [
+    {
+      "name": "DAX", "basis": "Kassa-Index", "close": 25181.65, "day_pct": -0.75, "week_pct": -1.72,
+      "closes": [25716.71, 25304.06, 25575.01, 25578.85, 25410.63, 25266.53, 25408.64, 25374.42, 25399.21, 25199.19, 24939.35, 25231.2, 25254.21, 25449.19, 25104.36, 24806.97, 25087.27, 25277.68, 25259.9, 25298.61, 25382.62, 25622.61, 25319.77, 25304.42, 25645.04, 25371.75, 25181.65],
+      "levels": {"val": 25162, "poc": 25381, "vah": 25599},
+      "candle": "rot", "trend_day": "SELL", "trend_week": "NEUTRAL", "rsi": 45.7, "adx": 16.3, "setup": "nein",
+      "note": "Freitag: Tief 25.014 unter dem VAL, Schluss knapp darüber, aber rote Kerze. Stützen: 25.014, 24.880 bis 24.940 (200-Tage-Linie), 24.793. Ein grüner Tagesschluss über 25.162 wäre ein Kandidat."
+    },
+    {
+      "name": "S&P 500", "basis": "Kassa-Index", "close": 7623.68, "day_pct": -0.52, "week_pct": -0.47,
+      "closes": [7637.76, 7650.5, 7764.7, 7764.64, 7706.03, 7704.13, 7743.41, 7683.69, 7670.84, 7651.54, 7666.45, 7722.72, 7773.95, 7818.93, 7801.77, 7765.36, 7811.54, 7807.24, 7805.45, 7718.94, 7744.06, 7659.44, 7690.73, 7712.57, 7757.17, 7663.43, 7623.68],
+      "levels": {"val": 7665, "poc": 7716, "vah": 7798},
+      "candle": "rot", "trend_day": "SELL", "trend_week": "BUY", "rsi": 42.2, "adx": 14.4, "setup": "nein",
+      "note": "Schluss unter dem VAL, am unteren Rand der Spanne seit 17.09. (7.610). Fällt der Index darunter, ist die Spanne gebrochen. Stütze: EMA100 bei 7.574."
+    },
+    {
+      "name": "Gold", "basis": "Future GC1!", "close": 4007.9, "day_pct": -1.29, "week_pct": -4.14,
+      "closes": [4424.9, 4383.9, 4376.4, 4318.4, 4298, 4321.2, 4168.4, 4179.7, 4186.7, 4202.3, 4162.3, 4156.8, 4187.1, 4140.7, 4157, 4216.3, 4190.6, 4177.3, 4107.9, 4170.1, 4181.1, 4160.1, 4142.6, 4150, 4060.4, 4007.9],
+      "levels": {"val": 4004, "poc": 4177, "vah": 4260},
+      "candle": "rot", "trend_day": "STRONG_SELL", "rsi": 30.8, "adx": 24.3, "setup": "nein",
+      "note": "Genau am VAL, aber unter allen Durchschnitten und im aktiven Abwärtstrend. Kein Boden-Signal, nicht gegen den Trend fangen."
+    },
+    {
+      "name": "WTI-Öl", "basis": "Future CL1!", "close": 103.27, "day_pct": 3.82, "week_pct": 4.29,
+      "closes": [96.08, 92.37, 90.52, 92.16, 94.61, 92.41, 92.6, 89.38, 90.42, 92.87, 91.11, 89.43, 89.44, 88.28, 91.49, 91.85, 93.74, 94.14, 95.09, 97.97, 99.02, 98.54, 97.82, 97.15, 99.47, 103.27],
+      "levels": {"val": 88.4, "poc": 92.0, "vah": 97.1},
+      "candle": "grün", "rsi": 63.2, "setup": "nein",
+      "note": "Rund 12 % über dem POC, kein Level in der Nähe. Hinterherlaufen wäre kein Einstieg nach deinen Regeln."
+    }
+  ],
+  "market": [
+    {"label": "VIX", "value": "19,45", "change_pct": 2.2, "week_pct": 21.4, "note": "Angst steigt, +21 % in der Woche", "tone": "warn"},
+    {"label": "US-Rendite 10 J.", "value": "5,00 %", "change_pct": 0.8, "note": "Zinsen auf hohem Niveau", "tone": "warn"},
+    {"label": "Bund-Rendite 10 J.", "value": "3,35 %", "change_pct": 0.7, "note": "", "tone": "muted"},
+    {"label": "Dollar-Index", "value": "101,75", "change_pct": 0.13, "note": "", "tone": "muted"},
+    {"label": "EUR/USD", "value": "1,1215", "change_pct": 0.10, "note": "", "tone": "muted"}
+  ],
+  "events": [
+    {"day": "Montag, 26.10.", "time": "10:00", "title": "Ifo-Geschäftsklima", "forecast": "89,8", "previous": "89,9", "importance": 1,
+     "why": "Stimmung der deutschen Unternehmen, wirkt direkt auf den DAX.",
+     "watch": "Abweichung von der Prognose, besonders der Teil Erwartungen.",
+     "reaction": "Meist moderat, eine große Überraschung bewegt den DAX kurz."},
+    {"day": "Mittwoch, 28.10.", "time": "19:00", "title": "Fed-Zinsentscheid und 19:30 Pressekonferenz", "forecast": "4,00 %", "previous": "4,00 %", "importance": 3,
+     "why": "Der US-Leitzins bestimmt, was Geld weltweit kostet.",
+     "watch": "Nicht der Zins, sondern der Ausblick: Wortwahl zu künftigen Schritten, Inflation, Abstimmung. Die Pressekonferenz bewegt oft mehr als die Entscheidung.",
+     "reaction": "Härterer Ton: Aktien, Tech und Gold meist unter Druck, Dollar stärker. Weicherer Ton: umgekehrt."},
+    {"day": "Mittwoch, 28.10.", "time": "nach 21:00", "title": "Quartalszahlen Microsoft und Alphabet", "importance": 2,
+     "why": "Große Nasdaq-Werte, ziehen den S&P 500 und am Folgetag oft den DAX.",
+     "watch": "Umsatz und Gewinn gegen Erwartung, vor allem Ausblick und KI-Ausgaben.",
+     "reaction": "Starke Zahlen stützen Tech, schwache belasten den Nasdaq stark."},
+    {"day": "Donnerstag, 29.10.", "time": "13:30", "title": "US-BIP Q3 und Core PCE", "forecast": "BIP 3,2 % / Core PCE +0,3 %", "previous": "2,2 % / +0,2 %", "importance": 3,
+     "why": "BIP zeigt die Wirtschaftskraft, Core PCE ist das von der Fed bevorzugte Inflationsmaß.",
+     "watch": "Core PCE über +0,3 % lässt die Zinserwartungen steigen.",
+     "reaction": "Über der Prognose: Druck auf Aktien und Gold, Rendite steigt. Ein starkes BIP stützt Gewinne, kann aber Zinssorgen nähren."},
+    {"day": "Donnerstag, 29.10.", "time": "14:15", "title": "EZB-Zinsentscheid", "forecast": "2,65 %", "previous": "2,65 %", "importance": 3,
+     "why": "Zinsen in der Eurozone, direkt relevant für den DAX.",
+     "watch": "Tonfall der Pressekonferenz (14:45), Aussagen zu Wachstum und Inflation.",
+     "reaction": "Härter: Euro stärker, DAX tendenziell schwächer."},
+    {"day": "Freitag, 30.10.", "time": "14:00", "title": "Inflation Deutschland (Oktober, vorläufig)", "previous": "3,3 %", "importance": 2,
+     "why": "Preisdruck in Deutschland, hoch wegen Energie.",
+     "watch": "Nähe zur 3-Prozent-Marke, Ölpreis.",
+     "reaction": "Höher als erwartet: Zinssorgen, Druck auf den DAX."}
+  ],
+  "alerts": [
+    "DAX (Kassa): kreuzt nach unten 25.162 und 25.014, das ist nur ein Hinweis.",
+    "DAX (Kassa): Tagesschluss grün über 25.162, dann Kandidat prüfen.",
+    "S&P 500: Tagesschluss über 7.665 (VAL zurückerobert) oder kreuzt unter 7.610 (Spanne gebrochen)."
+  ],
+  "rules": [
+    "Level-Treffer: DAX am VAL (ja), S&P 500 darunter, Gold am VAL, WTI keiner.",
+    "Bestätigte Umkehr mit grüner Tageskerze: nirgends.",
+    "Netto-CRV 3:1: mit 1× ATR als Stop kaum erreichbar, Papier-Trade ab 2:1."
+  ],
+  "gaps": [
+    "Der Bot-Report hinkt bei Aktien-ETFs einen Handelstag hinterher, die Zahlen stammen deshalb aus TradingView.",
+    "Die Makro-Liste im Bot ist noch leer, die Termine kommen aus dem TradingView-Kalender."
+  ]
+}

@@ -71,3 +71,35 @@ der Markt schon eingepreist hat. Erste Reaktionen werden oft nach Minuten wieder
   (Steuern, Handel, Haushalt).
 - **Zeitzonen:** In der Woche nach der EU-Zeitumstellung (letzter Sonntag im Oktober) und vor der US-Umstellung
   (erster Sonntag im November) öffnet New York bereits 14:30 Uhr deutscher Zeit.
+
+## E-Mail-Versand (täglich 08:00)
+
+Die Analyse wird als HTML-Mail verschickt. Daten holt eine Claude-Sitzung (TradingView-Tools gibt es nur dort), das Layout
+erzeugt `src/analysis_mail.py` deterministisch. Die Mail braucht keine Bilder: Balken, Mini-Kursverlauf und Preisleiter sind
+aus Tabellenzellen gebaut und erscheinen in jedem Mail-Programm.
+
+**Ablauf der Sitzung**
+1. Daten sammeln (Abschnitt "Datenquellen") und als JSON speichern (Aufbau unten, Beispiel:
+   `tests/fixtures/analysis_sample.json`).
+2. `python -m src.analysis_mail eingabe.json mail.html mail.txt` erzeugt HTML und Text und gibt den Betreff aus.
+3. Mit dem Gmail-Werkzeug `send_message` senden: `to` (Adresse von Benjamin), `subject` (ausgegebener Betreff),
+   `htmlBody` (Inhalt von `mail.html`), `body` (Inhalt von `mail.txt`).
+4. Montag bis Freitag `mode: "daily"` (Kurzform), sonntags `mode: "weekly"` (ausführlich).
+
+**Eingabe-JSON** (jeder Block ist optional; fehlende Blöcke werden weggelassen)
+
+| Feld | Inhalt |
+|---|---|
+| `date`, `mode`, `generated_at` | ISO-Datum, `daily` oder `weekly`, Fußzeilentext |
+| `verdict` | `label`, `tone` (`good`, `bad`, `warn`, `neutral`), `text` |
+| `instruments[]` | `name`, `basis`, `close`, `day_pct`, `week_pct` (Freitag zu Freitag), `closes[]` (letzte 20), `levels{val,poc,vah}`, `candle`, `trend_day`, `trend_week`, `rsi`, `adx`, `setup`, `note` |
+| `perf[]` | optional `{label, pct}`; sonst aus `instruments` (der VIX gehört nicht hinein, er verzerrt die Skala) |
+| `market[]` | `label`, `value`, `change_pct`, `note`, `tone` |
+| `events[]` | `day`, `time`, `title`, `forecast`, `previous`, `importance` (1 bis 3), `why`, `watch`, `reaction` |
+| `alerts[]`, `rules[]`, `gaps[]` | kurze Sätze |
+
+**Hinweise**
+- Wochenwerte immer Freitag zu Freitag rechnen. Das `Perf.W` von TradingView nutzt einen anderen Bezug und weicht ab.
+- Täglich nur Termine von heute und morgen aufnehmen. Eine Mail mit vier Instrumenten und sechs Terminen hat etwa
+  60 KB; Gmail kürzt ab etwa 100 KB.
+- Nur Anzeige und Lernhilfe, keine Anlageberatung, keine Orders.
