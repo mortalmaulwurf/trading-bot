@@ -72,6 +72,19 @@ der Markt schon eingepreist hat. Erste Reaktionen werden oft nach Minuten wieder
 - **Zeitzonen:** In der Woche nach der EU-Zeitumstellung (letzter Sonntag im Oktober) und vor der US-Umstellung
   (erster Sonntag im November) öffnet New York bereits 14:30 Uhr deutscher Zeit.
 
+## Veröffentlichung im Dashboard (täglich)
+
+Die geplante Claude-Sitzung schreibt zusätzlich `reports/analysis.json` in dieses Repo (Branch `main`). Das Dashboard
+(Tab "Analyse") liest die Datei direkt von GitHub. Es wird nur diese eine Datei committet.
+
+1. Daten sammeln und die Eingabe-JSON (Tabelle oben) um zwei Felder ergänzen: `"schema_version": 1` und
+   `"generated_at_utc"` (ISO-Zeitstempel, UTC). `mode` ist `daily` (Montag bis Freitag) oder `weekly` (Sonntag).
+2. Als `reports/analysis.json` speichern (UTF-8, eingerückt) und mit `git add reports/analysis.json` committen:
+   `chore(analysis): daily analysis YYYY-MM-DD`. Danach `git push origin main`.
+3. Nie andere Dateien anfassen, keine Orders, keine Geheimnisse in die Datei schreiben.
+4. Das Dashboard prüft das Format zur Laufzeit. Fehlt ein Block, wird er einfach nicht angezeigt; ein falscher Typ
+   (zum Beispiel Text statt Zahl bei `close`) verhindert, dass die Analyse lädt. Zahlen deshalb immer als JSON-Zahlen schreiben, nie als Text.
+
 ## E-Mail-Versand (täglich 08:00)
 
 Die Analyse wird als HTML-Mail verschickt. Daten holt eine Claude-Sitzung (TradingView-Tools gibt es nur dort), das Layout
@@ -101,5 +114,5 @@ aus Tabellenzellen gebaut und erscheinen in jedem Mail-Programm.
 **Hinweise**
 - Wochenwerte immer Freitag zu Freitag rechnen. Das `Perf.W` von TradingView nutzt einen anderen Bezug und weicht ab.
 - Täglich nur Termine von heute und morgen aufnehmen. Eine Mail mit vier Instrumenten und sechs Terminen hat etwa
-  60 KB; Gmail kürzt ab etwa 100 KB.
+  40 KB; Gmail kürzt ab etwa 100 KB.
 - Nur Anzeige und Lernhilfe, keine Anlageberatung, keine Orders.
