@@ -12,6 +12,7 @@
 #
 # region: "US" betrifft USD-Ticker (PG, WMT, MCD, SPY, QQQ, GC=F, CL=F)
 #         "EU" betrifft EUR-Ticker (RWE.DE, EXS1.DE)
+#         "JP" betrifft JPY-Ticker (1321.T, Nikkei 225), z.B. Zinsentscheid der Bank of Japan
 #
 # Beispiel-Eintrag (Datum/Label anpassen, dann das "#" davor entfernen):
 # events:

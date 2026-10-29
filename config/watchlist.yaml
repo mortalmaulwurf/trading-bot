@@ -26,14 +26,24 @@ tickers:
   # aber echtes Volumen braucht.
   # index_symbol (optional): Basis fuer die Umrechnung der ETF-Level in Indexwerte,
   # weil die Knock-out-Zertifikate auf den Index laufen.
-  # Nasdaq 100 (QQQ) ist bewusst nicht mehr dabei: laeuft zu eng mit dem S&P 500
-  # (Regel: ein Aktienindex gleichzeitig).
+  # Nasdaq 100 (QQQ) war zwischenzeitlich entfernt, weil er eng mit dem S&P 500 laeuft. Seit
+  # 2026-10-29 wieder dabei (Beobachtung; die Regel "eine Position gleichzeitig" bleibt bestehen,
+  # also nicht zwei stark korrelierte Aktienindizes gleichzeitig handeln).
+  # Nikkei 225 als Asien-Index: ETF 1321.T (Nomura, liquideste Nikkei-ETF an der Tokioter Boerse,
+  # Kurse in JPY). Die Boerse schliesst um 07:00 Uhr deutscher Zeit, der Abendscan sieht den
+  # abgeschlossenen Tag.
   - symbol: SPY
     name: "S&P 500"
     index_symbol: "^GSPC"
+  - symbol: QQQ
+    name: "Nasdaq 100"
+    index_symbol: "^NDX"
   - symbol: EXS1.DE
     name: "DAX"
     index_symbol: "^GDAXI"
+  - symbol: 1321.T
+    name: "Nikkei 225"
+    index_symbol: "^N225"
 
   # Rohstoffe – als Frontmonat-Futures, weil deren Handelsvolumen die
   # tatsächliche Marktaktivität widerspiegelt (Standard-Basis für

@@ -81,7 +81,7 @@ def get_upcoming_events(ticker: str, currency: str, days_ahead: int) -> list[str
     if earnings_date:
         events.append(f"Quartalszahlen am {earnings_date.isoformat()}")
 
-    region = "US" if currency == "USD" else "EU" if currency == "EUR" else None
+    region = {"USD": "US", "EUR": "EU", "JPY": "JP"}.get(currency)
 
     if region == "US":
         nfp_date = _next_first_friday(days_ahead)
