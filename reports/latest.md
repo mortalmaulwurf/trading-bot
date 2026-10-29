@@ -1,44 +1,44 @@
-# Swing-Trading Scan – 2026-10-28T01:04:59.432504+00:00
+# Swing-Trading Scan – 2026-10-29T01:40:34.113931+00:00
 
 Analysiert: 4 Ticker · Treffer: 2 (Schwelle: ±1.5% um POC/VAL)
 
 ## Treffer
 
-### DAX (EXS1.DE) – moderat
-- Kurs: 209.4 EUR · Level: POC @ 209.1917 (Abstand +0.10%)
-- Volumenprofil (ab 2026-09-17): POC 209.1917 · VAL 206.5633 · VAH 210.7133
-- Langfristiges Volumenprofil (Kontext): POC 205.9575 · VAL 196.32 · VAH 210.455 — ✅ Konfluenz mit langfristiges POC
-- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- ⚠️ Bevorstehende Termine: EZB-Ratssitzung am 2026-10-29 (Gap-Risiko beachten)
-- Bestätigungen (1/3): RSI 50.3 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 209.4 · Stop 206.6041 (1.34% Abstand, Level minus ATR) · Ziel 210.455 (langfristiges VAH)
-- Hebel 10× (max. 49× nach KO-Puffer, KO-Abstand mind. 2.00%) · Einsatz 57.75€ · Kosten 2.29€ · Verlust am Stop 10.00€
-- CRV brutto 0.38:1 · netto 0.06:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 221.1071 (+5.59%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 25410.84 · Stop 25071.56 · Ziel 25538.87 · Mindest-Ziel 26831.5
-
 ### S&P 500 (SPY) – moderat
-- Kurs: 765.37 USD · Level: POC @ 767.0358 (Abstand -0.22%)
-- Volumenprofil (ab 2026-09-17): POC 767.0358 · VAL 760.335 · VAH 772.9483
+- Kurs: 772.31 USD · Level: POC @ 767.0358 (Abstand +0.69%)
+- Volumenprofil (ab 2026-09-17): POC 767.0358 · VAL 761.1233 · VAH 772.9483
 - Langfristiges Volumenprofil (Kontext): POC 682.599 · VAL 634.358 · VAH 740.996
-- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 47.3 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 765.37 · Stop 759.7779 (0.73% Abstand, Level minus ATR) · Ziel 772.9483 (VAH)
-- Hebel 10× (max. 91× nach KO-Puffer, KO-Abstand mind. 1.10%) · Einsatz 102.48€ · Kosten 2.51€ · Verlust am Stop 10.00€
-- CRV brutto 1.36:1 · netto 0.76:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 789.6517 (+3.17%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 7676.77 · Stop 7620.68 · Ziel 7752.78 · Mindest-Ziel 7920.32
+- Wochentrend: aufwärts (✅ im Einklang mit einem Long-Einstieg)
+- Bestätigungen (1/3): RSI 53.3 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
+- Plan (Long): Einstieg 772.31 · Stop 760.0899 (1.58% Abstand, Level minus ATR) · Ziel kein Level oberhalb
+- Hebel 10× (max. 42× nach KO-Puffer, KO-Abstand mind. 2.37%) · Einsatz 49.01€ · Kosten 2.25€ · Verlust am Stop 10.00€
+- CRV: nicht berechenbar (kein Ziel-Level oberhalb des Kurses)
+- Mindest-Ziel für 3.0:1 netto: 823.1213 (+6.58%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 7743.98 · Stop 7621.45 · Ziel None · Mindest-Ziel 8253.47
+
+### DAX (EXS1.DE) – moderat
+- Kurs: 210.85 EUR · Level: POC @ 209.1917 (Abstand +0.79%)
+- Volumenprofil (ab 2026-09-17): POC 209.1917 · VAL 206.84 · VAH 210.99
+- Langfristiges Volumenprofil (Kontext): POC 205.9575 · VAL 196.32 · VAH 210.455 — ✅ Konfluenz mit langfristiges POC
+- Wochentrend: aufwärts (✅ im Einklang mit einem Long-Einstieg)
+- ⚠️ Bevorstehende Termine: EZB-Ratssitzung am 2026-10-29 (Gap-Risiko beachten)
+- Bestätigungen (1/3): RSI 53.6 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
+- Plan (Long): Einstieg 210.85 · Stop 206.6139 (2.01% Abstand, Level minus ATR) · Ziel kein Level oberhalb
+- Hebel 10× (max. 33× nach KO-Puffer, KO-Abstand mind. 3.01%) · Einsatz 38.85€ · Kosten 2.19€ · Verlust am Stop 10.00€
+- CRV: nicht berechenbar (kein Ziel-Level oberhalb des Kurses)
+- Mindest-Ziel für 3.0:1 netto: 228.3215 (+8.29%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 25590.77 · Stop 25076.64 · Ziel None · Mindest-Ziel 27711.27
 
 ## Alle beobachteten Instrumente
 
 | Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |
 |---|---|---|---|---|---|---|
-| S&P 500 (SPY) | 765.37 USD | POC @ 767.0358 | -0.22% | 47.3 | abwärts | ✅ |
-| DAX (EXS1.DE) | 209.4 EUR | POC @ 209.1917 | +0.10% | 50.3 | abwärts | ✅ |
-| Gold (GC=F) | 4075.8 USD | VAL @ 4004.1234 | +1.79% | 39.3 | abwärts | – |
-| WTI-Rohöl (CL=F) | 100.31 USD | POC @ 91.9777 | +9.06% | 57.0 | aufwärts | – |
+| S&P 500 (SPY) | 772.31 USD | POC @ 767.0358 | +0.69% | 53.3 | aufwärts | ✅ |
+| DAX (EXS1.DE) | 210.85 EUR | POC @ 209.1917 | +0.79% | 53.6 | aufwärts | ✅ |
+| Gold (GC=F) | 4077.3999 USD | VAL @ 4004.1234 | +1.83% | 39.6 | abwärts | – |
+| WTI-Rohöl (CL=F) | 101.84 USD | POC @ 91.9777 | +10.72% | 59.0 | aufwärts | – |
 
 ## Bevorstehende Termine
 
