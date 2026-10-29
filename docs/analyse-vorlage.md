@@ -105,6 +105,7 @@ aus Tabellenzellen gebaut und erscheinen in jedem Mail-Programm.
 |---|---|
 | `date`, `mode`, `generated_at` | ISO-Datum, `daily` oder `weekly`, Fußzeilentext |
 | `verdict` | `label`, `tone` (`good`, `bad`, `warn`, `neutral`), `text` |
+| `summary[]` | Dashboard: 3 bis 5 kurze Sätze für die Morgenlektüre (Rückblick auf gestern, Ausblick auf heute) |
 | `instruments[]` | `name`, `basis`, `close`, `day_pct`, `week_pct` (Freitag zu Freitag), `closes[]` (letzte 20), `levels{val,poc,vah}`, `candle`, `trend_day`, `trend_week`, `rsi`, `adx`, `setup`, `note` |
 | `perf[]` | optional `{label, pct}`; sonst aus `instruments` (der VIX gehört nicht hinein, er verzerrt die Skala) |
 | `market[]` | `label`, `value`, `change_pct`, `note`, `tone` |
