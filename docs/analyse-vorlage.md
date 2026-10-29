@@ -18,6 +18,7 @@ Papier-Trade-Stufe: Netto-CRV zwischen 2:1 und 3:1 (nur Journal). Volumenprofil 
 ## Datenquellen
 - **TradingView-Tools** (in der Claude-Session, nicht im Bot):
   - `get-ohlcv` (1D, ab Anker): `XETR:DAX` (Index-Volumen), `XETR:EXS1` (ETF, Bot-Basis), `SP:SPX`, `AMEX:SPY`,
+    `NASDAQ:NDX` (Nasdaq 100), `NASDAQ:QQQ` (ETF, Bot-Basis), `TVC:NI225` (Nikkei 225), `TSE:1321` (ETF, Bot-Basis),
     `COMEX:GC1!`, `NYMEX:CL1!`.
   - `get-technicals-rating` (1D und 1W): Trend, RSI, ADX, gleitende Durchschnitte.
   - `get-symbol-data-batch` mit Spalten `close, change, Perf.W, Perf.1M, Perf.3M, Perf.YTD`: VIX (`CBOE:VIX`),
@@ -27,12 +28,17 @@ Papier-Trade-Stufe: Netto-CRV zwischen 2:1 und 3:1 (nur Journal). Volumenprofil 
   - `get-news` für `XETR:DAX` und `SP:SPX` (Titel, Details oft hinter Bezahlschranke).
 - **Bot-Report** `reports/latest.json`: Regel-Checks, Plan, Index-Punkte. **Achtung:** Der Report hinkt bei Aktien-ETFs
   oft einen Handelstag hinterher; den letzten Schluss deshalb aus TradingView nehmen und den Befund nennen.
+- **Nikkei 225:** Die Tokioter Börse handelt bis 07:00 Uhr deutscher Zeit. Bei einer Analyse um 06:00 ist die
+  Tageskerze noch offen: als Schluss gilt der Vortag, der laufende Stand wird als Hinweis genannt. Der Bot sieht abends
+  den abgeschlossenen Tag (Kurse in JPY, Umrechnung in Indexpunkte über `^N225`).
+- **Nasdaq 100:** Läuft eng mit dem S&P 500. Beobachten ist erlaubt, gehandelt wird nur eine Position gleichzeitig
+  (nicht zwei stark korrelierte Aktienindizes parallel).
 - **Kassa gegen CFD:** Der CFD (z. B. Germany 40) liegt rund 170 Punkte über der Kassa (Future-Prämie, schwankt täglich).
   Level immer mit Basis angeben.
 
 ## Aufbau
 1. **Empfehlung zuerst:** Einstieg ja/nein (Kandidat?) in einem Satz, mit Grund.
-2. **Tabelle je Instrument** (DAX, S&P 500, Gold, WTI): Schluss, Woche (Freitag zu Freitag), Lage zu VAL/POC/VAH,
+2. **Tabelle je Instrument** (DAX, S&P 500, Nasdaq 100, Nikkei 225, Gold, WTI): Schluss, Woche (Freitag zu Freitag), Lage zu VAL/POC/VAH,
    letzte Kerze (grün/rot), Setup ja/nein.
 3. **Trend:** Technicals Tag und Woche, Lage zu EMA20/50/200, RSI, ADX; Stützen und Widerstände mit Zahlen.
 4. **Marktdaten:** VIX, Renditen, Dollar, Öl, Gold, mit Einordnung (steigende Angst, hohe Zinsen, Inflationsdruck).
