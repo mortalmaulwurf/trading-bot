@@ -1,33 +1,46 @@
-# Swing-Trading Scan – 2026-10-31T01:28:37.210496+00:00
+# Swing-Trading Scan – 2026-11-03T03:24:47.173584+00:00
 
-Analysiert: 6 Ticker · Treffer: 1 (Schwelle: ±1.5% um POC/VAL)
+Analysiert: 6 Ticker · Treffer: 2 (Schwelle: ±1.5% um POC/VAL)
 
 ## Treffer
 
-### S&P 500 (SPY) – stark
-- Kurs: 755.72 USD · Level: VAL @ 760.78 (Abstand -0.67%)
-- Volumenprofil (ab 2026-09-17): POC 767.553 · VAL 760.78 · VAH 773.284
+### S&P 500 (SPY) – schwach (nur Level-Nähe)
+- Kurs: 752.1 USD · Level: VAL @ 759.738 (Abstand -1.01%)
+- Volumenprofil (ab 2026-09-17): POC 767.553 · VAL 759.738 · VAH 773.284
 - Langfristiges Volumenprofil (Kontext): POC 682.599 · VAL 634.358 · VAH 740.996
 - Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
 - ⚠️ Bevorstehende Termine: US-Arbeitsmarktbericht am 2026-11-06 (Gap-Risiko beachten)
-- Bestätigungen (2/3): RSI 40.2 · Volumen-Spike ja · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 755.72 · Stop 753.0563 (0.35% Abstand, Level minus ATR) · Ziel 767.553 (POC)
-- Hebel 10× (max. 189× nach KO-Puffer, KO-Abstand mind. 0.53%) · Einsatz 198.78€ · Kosten 2.99€ · Verlust am Stop 10.00€
-- CRV brutto 4.44:1 · netto 2.81:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 768.2638 (+1.66%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 7580.07 · Stop 7553.35 · Ziel 7698.76 · Mindest-Ziel 7705.89
+- Bestätigungen (0/3): RSI 38.0 · Volumen-Spike nein · Intraday-Momentum neutral
+- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ✅
+- Plan (Long): Einstieg 752.1 · Stop 751.6904 (0.05% Abstand, Level minus ATR) · Ziel 767.553 (POC)
+- Hebel 10× (max. 1224× nach KO-Puffer, KO-Abstand mind. 0.08%) · Einsatz 300.00€ · Kosten 3.50€ · Verlust am Stop 5.13€
+- CRV brutto 37.73:1 · netto 11.33:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 756.8385 (+0.63%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 7541.4 · Stop 7537.29 · Ziel 7696.35 · Mindest-Ziel 7588.91
+
+### Gold (GC=F) – moderat
+- Kurs: 3951.1001 USD · Level: VAL @ 3991.4 (Abstand -1.01%)
+- Volumenprofil (ab 2026-09-17): POC 4187.5749 · VAL 3991.4 · VAH 4252.9666
+- Langfristiges Volumenprofil (Kontext): POC 4362.9218 · VAL 3993.0934 · VAH 4675.8535 — ✅ Konfluenz mit langfristiges VAL
+- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
+- ⚠️ Bevorstehende Termine: US-Arbeitsmarktbericht am 2026-11-06 (Gap-Risiko beachten)
+- Bestätigungen (1/3): RSI 34.1 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ✅
+- Plan (Long): Einstieg 3951.1001 · Stop 3910.4406 (1.03% Abstand, Level minus ATR) · Ziel 4187.5749 (POC)
+- Hebel 10× (max. 64× nach KO-Puffer, KO-Abstand mind. 1.54%) · Einsatz 74.14€ · Kosten 2.37€ · Verlust am Stop 10.00€
+- CRV brutto 5.82:1 · netto 4.2:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 4123.6158 (+4.37%)
 
 ## Alle beobachteten Instrumente
 
 | Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |
 |---|---|---|---|---|---|---|
-| S&P 500 (SPY) | 755.72 USD | VAL @ 760.78 | -0.67% | 40.2 | abwärts | ✅ |
-| Nasdaq 100 (QQQ) | 690.49 USD | VAL @ 715.214 | -3.46% | 34.9 | abwärts | – |
-| DAX (EXS1.DE) | 214.65 EUR | POC @ 209.1875 | +2.61% | 61.2 | aufwärts | – |
-| Nikkei 225 (1321.T) | 657.7 JPY | POC @ 19.3764 | +3294.33% | 50.8 | abwärts | – |
-| Gold (GC=F) | 3884.8999 USD | VAL @ 3991.4 | -2.67% | 27.2 | abwärts | – |
-| WTI-Rohöl (CL=F) | 102.95 USD | POC @ 91.9777 | +11.93% | 60.0 | aufwärts | – |
+| S&P 500 (SPY) | 752.1 USD | VAL @ 759.738 | -1.01% | 38.0 | abwärts | ✅ |
+| Nasdaq 100 (QQQ) | 681.09 USD | VAL @ 713.342 | -4.52% | 32.1 | abwärts | – |
+| DAX (EXS1.DE) | 212.7 EUR | POC @ 209.1875 | +1.68% | 56.0 | aufwärts | – |
+| Nikkei 225 (1321.T) | 657.0 JPY | POC @ 19.3764 | +3290.72% | 50.7 | abwärts | – |
+| Gold (GC=F) | 3951.1001 USD | VAL @ 3991.4 | -1.01% | 34.1 | abwärts | ✅ |
+| WTI-Rohöl (CL=F) | 96.69 USD | POC @ 91.9777 | +5.12% | 48.5 | abwärts | – |
 
 ## Bevorstehende Termine
 
