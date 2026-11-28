@@ -1,45 +1,32 @@
-# Swing-Trading Scan – 2026-11-27T04:00:35.757553+00:00
+# Swing-Trading Scan – 2026-11-28T03:48:21.732067+00:00
 
-Analysiert: 6 Ticker · Treffer: 2 (Schwelle: ±1.5% um POC/VAL)
+Analysiert: 6 Ticker · Treffer: 1 (Schwelle: ±1.5% um POC/VAL)
 
 ## Treffer
 
-### WTI-Rohöl (CL=F) – moderat
-- Kurs: 85.68 USD · Level: VAL @ 85.352 (Abstand +0.38%)
-- Volumenprofil (ab 2026-09-17): POC 90.0635 · VAL 85.352 · VAH 100.01
-- Langfristiges Volumenprofil (Kontext): POC 90.455 · VAL 70.03 · VAH 104.43
-- Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- ⚠️ Bevorstehende Termine: US-Arbeitsmarktbericht am 2026-12-04 (Gap-Risiko beachten)
-- Bestätigungen (1/3): RSI 44.4 · Volumen-Spike nein · Intraday-Momentum dreht hoch
-- Regel-Check: Umkehr (Tagesschluss über Level) ✅ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 85.68 · Stop 81.4472 (4.94% Abstand, Level minus ATR) · Ziel 90.0635 (POC)
-- Hebel 10× (max. 13× nach KO-Puffer, KO-Abstand mind. 7.41%) · Einsatz 16.03€ · Kosten 2.08€ · Verlust am Stop 10.00€
-- CRV brutto 1.04:1 · netto 0.61:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 102.8254 (+20.01%)
-
 ### DAX (EXS1.DE) – moderat
-- Kurs: 203.45 EUR · Level: VAL @ 205.35 (Abstand -0.93%)
-- Volumenprofil (ab 2026-09-17): POC 210.1 · VAL 205.35 · VAH 212.95
+- Kurs: 208.0 EUR · Level: POC @ 208.2 (Abstand -0.10%)
+- Volumenprofil (ab 2026-09-17): POC 208.2 · VAL 205.35 · VAH 212.95
 - Langfristiges Volumenprofil (Kontext): POC 206.5225 · VAL 197.52 · VAH 211.37 — ✅ Konfluenz mit langfristiges POC
 - Wochentrend: abwärts (⚠️ spricht dagegen mit einem Long-Einstieg)
-- Bestätigungen (1/3): RSI 37.1 · Volumen-Spike nein · Intraday-Momentum dreht hoch
+- Bestätigungen (1/3): RSI 44.9 · Volumen-Spike nein · Intraday-Momentum dreht hoch
 - Regel-Check: Umkehr (Tagesschluss über Level) ❌ · Netto-CRV ≥ 3.0:1 ❌
-- Plan (Long): Einstieg 203.45 · Stop 202.0012 (0.71% Abstand, Level minus ATR) · Ziel 206.5225 (langfristiges POC)
-- Hebel 10× (max. 93× nach KO-Puffer, KO-Abstand mind. 1.07%) · Einsatz 104.97€ · Kosten 2.52€ · Verlust am Stop 10.00€
-- CRV brutto 2.12:1 · netto 1.33:1 (❌ unter Mindest 3.0:1)
-- Mindest-Ziel für 3.0:1 netto: 209.7539 (+3.10%)
-- Indexwerte für Rechner/Zertifikat: Einstieg 24702.13 · Stop 24526.22 · Ziel 25075.18 · Mindest-Ziel 25467.52
+- Plan (Long): Einstieg 208.0 · Stop 204.7332 (1.57% Abstand, Level minus ATR) · Ziel 211.37 (langfristiges VAH)
+- Hebel 10× (max. 42× nach KO-Puffer, KO-Abstand mind. 2.36%) · Einsatz 49.37€ · Kosten 2.25€ · Verlust am Stop 10.00€
+- CRV brutto 1.03:1 · netto 0.58:1 (❌ unter Mindest 3.0:1)
+- Mindest-Ziel für 3.0:1 netto: 221.587 (+6.53%)
+- Indexwerte für Rechner/Zertifikat: Einstieg 25215.52 · Stop 24819.5 · Ziel 25624.06 · Mindest-Ziel 26862.65
 
 ## Alle beobachteten Instrumente
 
 | Instrument | Kurs | Nächstes Level | Abstand % | RSI | Wochentrend | Treffer |
 |---|---|---|---|---|---|---|
-| S&P 500 (SPY) | 716.7 USD | VAL @ 740.5097 | -3.22% | 39.8 | abwärts | – |
-| Nasdaq 100 (QQQ) | 633.93 USD | VAL @ 663.661 | -4.48% | 38.6 | abwärts | – |
-| DAX (EXS1.DE) | 203.45 EUR | VAL @ 205.35 | -0.93% | 37.1 | abwärts | ✅ |
-| Nikkei 225 (1321.T) | 609.2 JPY | POC @ 19.3764 | +3044.03% | 46.8 | abwärts | – |
-| Gold (GC=F) | 3658.2 USD | VAL @ 3831.0399 | -4.51% | 38.2 | abwärts | – |
-| WTI-Rohöl (CL=F) | 85.68 USD | VAL @ 85.352 | +0.38% | 44.4 | abwärts | ✅ |
+| S&P 500 (SPY) | 728.32 USD | VAL @ 740.5097 | -1.65% | 45.0 | abwärts | – |
+| Nasdaq 100 (QQQ) | 650.99 USD | VAL @ 663.661 | -1.91% | 44.0 | abwärts | – |
+| DAX (EXS1.DE) | 208.0 EUR | POC @ 208.2 | -0.10% | 44.9 | abwärts | ✅ |
+| Nikkei 225 (1321.T) | 611.3 JPY | POC @ 19.3764 | +3054.87% | 47.2 | abwärts | – |
+| Gold (GC=F) | 3668.5 USD | VAL @ 3831.0399 | -4.24% | 38.9 | abwärts | – |
+| WTI-Rohöl (CL=F) | 83.08 USD | VAL @ 85.352 | -2.66% | 39.2 | abwärts | – |
 
 ## Bevorstehende Termine
 
